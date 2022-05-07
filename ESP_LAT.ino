@@ -1,3 +1,7 @@
+/*
+  ESP_LAT.ino - Example code
+*/
+
 #include <ESP8266WiFi.h>
 #include "LAT8266.h"
 

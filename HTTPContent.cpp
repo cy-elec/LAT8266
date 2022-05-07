@@ -1,3 +1,10 @@
+/*
+   HTTPContent.cpp - Library for HTTP Header/Body processing
+   Copyright(c) 2022 Felix Kröhnert. All right reserved.
+
+   This library is distributed under the terms of the <license> and WITHOUT ANY WARRANTY
+*/
+
 #include "HTTPContent.h"
 
 HTTPContent::HTTPContent() {
