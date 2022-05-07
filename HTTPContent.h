@@ -1,6 +1,6 @@
 /*
    HTTPContent.h - Library for HTTP Header/Body processing
-   Copyright(c) 2022 Felix Kröhnert. All right reserved.
+   Copyright(c) 2022 Felix Kröhnert. All rights reserved.
 
    This library is distributed under the terms of the <license> and WITHOUT ANY WARRANTY
 */
