@@ -11,7 +11,7 @@ void setup() {
   Serial.println();
   
   LAT.WIFI_SSID = "ILR8OURxtkEI8D1p";
-  LAT.WIFI_PSSWD = "Z1I25SWOmgpY3rSw";
+  LAT.WIFI_PSSWD = "Z1I25SWOmgqY3rSw";
   if(LAT.wifi_connect(5000))
     LAT.reflect("hthost=worldtimeapi.org;htpath=/api/timezone/Europe/Berlin;htdefault;htcode;htheader?;htbody?");
 }
