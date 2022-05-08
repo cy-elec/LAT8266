@@ -14,6 +14,7 @@
 
 #define LAT_VERSION F("Version.1.1 - LAT by Felix Kröhnert")
 #define LAT_HELP F("Please refer to the documentation here <link>")
+#define LAT_BAUD 115200
 
 /*
      * CMD - 0
@@ -30,7 +31,7 @@ class LAT8266Class {
     char* WIFI_SSID = "";
     char* WIFI_PSSWD = NULL;
   
-    bool wifi_connect(int);
+    bool connect(unsigned int);
 
     void reflect(String);
 

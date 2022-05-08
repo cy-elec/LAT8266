@@ -20,7 +20,7 @@
  * -reboot
  */
 
-bool LAT8266Class::wifi_connect(int timeout) {
+bool LAT8266Class::connect(unsigned int timeout) {
   timeout+=millis();
   
   WiFi.mode(WIFI_STA);
@@ -164,8 +164,10 @@ void LAT8266Class::httpUsingDefault() {
                    "Host: " + HTTP_host + "\r\n" +
                    "Connection: close\r\n" +
                    "\r\n"
-                  );            
-  httpBody.clear();
+                  );
+  if(HTTP_type=="GET" || HTTP_type=="HEAD" || HTTP_type=="DELETE") {
+    httpBody.clear();
+  }
   httpRequest();
 }
 

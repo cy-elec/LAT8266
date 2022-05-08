@@ -3,49 +3,46 @@ Syntax Coloring Map For LAT
 #######################################
 
 #######################################
-# Library (KEYWORD3)
+# Library (KEYWORD1)
 #######################################
 
-LAT8266Class	        KEYWORD3
-HTTPContent             KEYWORD3
+LAT8266	KEYWORD1
+HTTPContent KEYWORD1
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-LAT	                    KEYWORD1
+LAT	KEYWORD1
+WIFI_SSID	KEYWORD1
+WIFI_PSSWD	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
 #LAT8266Class
-reflect	                KEYWORD2
-wifi_connect	        KEYWORD2
-loop_cmd                KEYWORD2
-printHeader             KEYWORD2
-printBody               KEYWORD2
-getHttpCode             KEYWORD2
-httpUsingDefault        KEYWORD2
-httpRequest             KEYWORD2
+reflect	KEYWORD2
+connect	KEYWORD2
+loop_cmd	KEYWORD2
+printHeader	KEYWORD2
+printBody	KEYWORD2
+getHttpCode	KEYWORD2
+httpUsingDefault	KEYWORD2
+httpRequest	KEYWORD2
 
 #HTTPContent
-addLine             	KEYWORD2
-set                     KEYWORD2
-clear                   KEYWORD2
-toString                KEYWORD2
+addLine	KEYWORD2
+set	KEYWORD2
+clear	KEYWORD2
+toString	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
-CMDMODE_CMD         	LITERAL1
-CMDMODE_GET             LITERAL1
-CMDMODE_SET             LITERAL1
-HTTP_BODY               LITERAL1
-HTTP_HEADER             LITERAL1
-
-#######################################
-# Others (LITERAL2)
-#######################################
-WIFI_SSID               LITERAL2
-WIFI_PSSWD              LITERAL2
+CMDMODE_CMD	LITERAL1
+CMDMODE_GET	LITERAL1
+CMDMODE_SET	LITERAL1
+HTTP_BODY	LITERAL1
+HTTP_HEADER	LITERAL1
+LAT_BAUD	LITERAL1
