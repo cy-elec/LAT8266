@@ -73,3 +73,7 @@ bool HTTPContent::set(String info) {
 bool HTTPContent::clear() {
   return set("");
 }
+
+int HTTPContent::getSize() {
+  return size;
+}

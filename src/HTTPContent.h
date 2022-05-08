@@ -25,6 +25,7 @@ class HTTPContent {
     bool addLine(String);
     bool set(String);
     bool clear();
+    int getSize();
     
   private:
     uint8_t type=HTTP_HEADER;
