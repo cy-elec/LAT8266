@@ -1,4 +1,5 @@
 # LAT8266.cpp
 
-cmd:: read htheader
-cmd:: read htbody
+cmd:: read header
+cmd:: read body
+cmd:: reboot

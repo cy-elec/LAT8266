@@ -7,6 +7,10 @@
 
 #include "LAT8266.h"
 
+LAT8266Class::LAT8266Class() {
+  WiFi.setAutoConnect(toggleAutoCon);
+}
+
 bool LAT8266Class::connect(unsigned int timeout, bool silent) {
   int otim=timeout;
   timeout+=millis();
@@ -143,7 +147,7 @@ void LAT8266Class::cmdwifiCONN(char *pt) {
           Serial.println("ERROR TIMEDOUT");
         break;
     case MODE_GET: 
-        Serial.println("ERROR NOCMD");
+        Serial.println(WiFi.isConnected());
         break;
     default: 
         if(connect(WIFI_CONNDEFAULTTIME, true))
@@ -156,6 +160,50 @@ void LAT8266Class::cmdwifiCONN(char *pt) {
 
 void LAT8266Class::cmdwifiIP() {
   Serial.println(WiFi.localIP());
+}
+
+void LAT8266Class::cmdwifiCHNL() {
+  Serial.println(WiFi.channel());
+}
+
+void LAT8266Class::cmdwifiMAC() {
+  Serial.println(WiFi.macAddress());
+}
+
+void LAT8266Class::cmdwifiNAME(char *pt) {
+  switch(currentMode) {
+    case MODE_SET: 
+        while(*(pt++)!='\0');
+        WiFi.hostname(String(pt));
+        break;
+    case MODE_GET: 
+        Serial.println(WiFi.hostname());
+        break;
+    default: Serial.println(WiFi.hostname()); break;
+  }
+}
+
+void LAT8266Class::cmdwifiAUTO(char *pt) {
+  switch(currentMode) {
+    case MODE_SET: 
+        while(*(pt++)!='\0');
+        capitalizeStr(pt);
+        if(!strcmp(pt, "TRUE")) toggleAutoCon = true;
+        else if(!strcmp(pt, "FALSE")) toggleAutoCon = false;
+        else {
+          Serial.println("ERROR VALUE");
+          break;
+        }
+        Serial.println("OK");
+        break;
+    case MODE_GET: 
+        Serial.println(toggleAutoCon);
+        break;
+    default: 
+        toggleAutoCon=!toggleAutoCon;
+        Serial.println("OK"); break;
+  }
+  WiFi.setAutoConnect(toggleAutoCon);
 }
 
 void LAT8266Class::cmdwifiSCAN(char *pt) {
@@ -281,6 +329,18 @@ void LAT8266Class::processArg(char *src) {
   }
   else if(!strcmp(src, "WIFIIP")) {       //WIFI IP
     cmdwifiIP();
+  }
+  else if(!strcmp(src, "WIFICHNL")) {       //WIFI Channel
+    cmdwifiCHNL();
+  }
+  else if(!strcmp(src, "WIFIMAC")) {       //WIFI MacAddress
+    cmdwifiMAC();
+  }
+  else if(!strcmp(src, "WIFINAME")) {       //WIFI Name
+    cmdwifiNAME(src);
+  }
+  else if(!strcmp(src, "WIFIAUTO")) {       //WIFI AutoConnect
+    cmdwifiAUTO(src);
   }
   else if(!strcmp(src, "WIFISCAN")) {       //WIFI SCAN
     cmdwifiSCAN(src);

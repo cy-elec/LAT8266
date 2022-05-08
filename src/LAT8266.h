@@ -29,7 +29,8 @@ typedef enum cmdmodes {
  
 class LAT8266Class {
   public:
-  
+    LAT8266Class();
+
     String WIFI_SSID = "";
     void LAT8266_HIDE_PSSWD();    
 
@@ -73,6 +74,11 @@ class LAT8266Class {
     void cmdwifiRSSI();
     void cmdwifiCONN(char *pt);
     void cmdwifiIP();
+    void cmdwifiCHNL();
+    void cmdwifiMAC();
+    void cmdwifiNAME(char *pt);
+    void cmdwifiAUTO(char *pt);
+    bool toggleAutoCon = true;
     void cmdwifiSCAN(char *pt);
 
     /*
