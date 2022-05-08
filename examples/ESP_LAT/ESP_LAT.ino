@@ -19,6 +19,10 @@ void setup() {
   if(LAT.connect()) {
     //push a simple http request to optain the time in Berlin
     LAT.reflect("hthost=worldtimeapi.org;htpath=/api/timezone/Europe/Berlin;htdefault;htcode;htheader?;htbody?");
+
+    //push dummy request in raw mode
+    LAT.setBody("{\"text\":\"This is the body\"}");
+    LAT.reflect("hthost=httpbin.org;htpath=/put;httype=put;htdefault;htcode;htheader?;htbody?");
   }
 }
 

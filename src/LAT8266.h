@@ -17,6 +17,7 @@
 #define LAT_BAUD 115200
 #define WIFI_CONNDEFAULTTIME 20000
 #define WIFI_SCANDEFAULTTIME 10000
+#define HTTP_READDEFAULTTIME 1000
 
 /*
      * CMD - 0
@@ -49,6 +50,10 @@ class LAT8266Class {
     
     void printHeader();
     void printBody();
+    void printHeaderInput();
+    void printBodyInput();
+    bool setHeader(String);
+    bool setBody(String);
     int getHttpCode();
     void httpUsingDefault();
     void httpRequest();
@@ -91,9 +96,12 @@ class LAT8266Class {
     bool toggleBuffer = true;
     HTTPContent httpHeader = HTTPContent(HTTP_HEADER);
     HTTPContent httpBody = HTTPContent(HTTP_BODY);
+    HTTPContent httpHeaderInput = HTTPContent(HTTP_HEADER);
+    HTTPContent httpBodyInput = HTTPContent(HTTP_BODY);
 
     bool readHeader();
     bool readBody();
+    bool readHTTPContent(HTTPContent*);
 
     //command interaction
     void cmdhttpHost(char *pt);

@@ -237,7 +237,7 @@ void LAT8266Class::loop_cmd() {
   /*
    * Wait for command
   */  
-  while(!Serial.available());
+  if(!Serial.available()) return;
   input[currentPt] = Serial.read();
   currentPt++;
   if(currentPt>=2 && input[currentPt-2]=='\r' && input[currentPt-1=='\n']) {
@@ -309,6 +309,12 @@ void LAT8266Class::processArg(char *src) {
   else if(!strcmp(src, "HTBODY")) {     //HTTP Body
     cmdhttpBody(src);
   }
+  else if(!strcmp(src, "HTHEADERIN")) {     //HTTP HeaderInput
+    printHeaderInput();
+  }
+  else if(!strcmp(src, "HTBODYIN")) {     //HTTP BodyInput
+    printBodyInput();
+  }
   else if(!strcmp(src, "HTCODE")) {     //HTTP Request Code
     cmdhttpCode();
   }
@@ -368,15 +374,17 @@ void LAT8266Class::httpUsingDefault() {
     return;
   }
   /**/
-  if(!httpHeader.set(HTTP_type + " " + HTTP_path + " HTTP/1.1\r\n" +
+  if(!httpHeaderInput.set(HTTP_type + " " + HTTP_path + " HTTP/1.1\r\n" +
                    "Host: " + HTTP_host + "\r\n" +
                    "Connection: close\r\n" +
                    "\r\n"
                   ))
     return;
   if(HTTP_type=="GET" || HTTP_type=="HEAD" || HTTP_type=="DELETE") {
-    if(!httpBody.clear())
+    if(!httpBodyInput.clear()) {
+      Serial.println("ERROR BODYFOUND")
       return;
+    }
   }
   httpRequest();
 }
@@ -385,8 +393,8 @@ void LAT8266Class::httpRequest() {
   if (WiFi.status() == WL_CONNECTED) {
     if (client.connect(HTTP_host, HTTP_Port))
     {
-      String req = httpHeader.toString();
-      req+=httpBody.toString();  
+      String req = httpHeaderInput.toString();
+      req+=httpBodyInput.toString();  
       client.print(req);
 
       
@@ -436,11 +444,52 @@ void LAT8266Class::httpRequest() {
 }
 
 bool LAT8266Class::readHeader() {
-  
+  return readHTTPContent(&httpHeaderInput);
 }
 
 bool LAT8266Class::readBody() {
+  return readHTTPContent(&httpBodyInput);
+}
+
+bool LAT8266Class::setHeader(String in) {
+  return httpHeaderInput.set(in);
+}
+
+bool LAT8266Class::setBody(String in) {
+  return httpBodyInput.set(in);
+}
+
+bool LAT8266Class::readHTTPContent(HTTPContent *c) {
+  Serial.println("READ");
   
+  bool reading = true;
+  String line = "";
+  c->clear();
+
+  while(reading) {
+    /*
+    * Wait for input
+    */  
+    int timeout=millis()+HTTP_READDEFAULTTIME;
+    while(!Serial.available()) {
+      if(millis()>=timeout) {
+        Serial.println("ERROR TIMEDOUT");
+        return false;
+      }
+    }
+    line += String((char)Serial.read());
+    Serial.println(line);
+    if(line.endsWith("\r\n")) {
+      if(!c->addLine(line)) {
+        return false;
+      }
+      if(line=="\r\n")
+        break;
+      line="";
+    }
+  }
+  Serial.println("OK");
+  return true;
 }
 
 //command interaction
@@ -477,6 +526,7 @@ void LAT8266Class::cmdhttpType(char *pt) {
     case MODE_SET: 
         while(*(pt++)!='\0');
         HTTP_type = String(pt);
+        HTTP_type.toUpperCase();
         Serial.println("OK");
         break;
     case MODE_GET: 
@@ -501,7 +551,7 @@ void LAT8266Class::cmdhttpPort(char *pt) {
 
 void LAT8266Class::cmdhttpHeader(char *pt) {
   switch(currentMode) {
-    case MODE_SET: Serial.println("ERROR NOCMD"); break;
+    case MODE_SET: readHeader(); break;
     case MODE_GET: printHeader(); break;
     default: Serial.println("ERROR NOCMD"); break;
   }
@@ -509,7 +559,7 @@ void LAT8266Class::cmdhttpHeader(char *pt) {
 
 void LAT8266Class::cmdhttpBody(char *pt) {
   switch(currentMode) {
-    case MODE_SET: Serial.println("ERROR NOCMD"); break;
+    case MODE_SET: readBody(); break;
     case MODE_GET: printBody(); break;
     default: Serial.println("ERROR NOCMD"); break;
   }
@@ -547,6 +597,14 @@ void LAT8266Class::printHeader() {
 
 void LAT8266Class::printBody() {
   Serial.println(httpBody.toString());
+}
+
+void LAT8266Class::printHeaderInput() {
+  Serial.println(httpHeaderInput.toString());
+}
+
+void LAT8266Class::printBodyInput() {
+  Serial.println(httpBodyInput.toString());
 }
 
 int LAT8266Class::getHttpCode() {
