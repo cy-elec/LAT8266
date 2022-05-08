@@ -12,9 +12,11 @@
 #include <ESP8266WiFi.h>
 #include "HTTPContent.h"
 
-#define LAT_VERSION F("Version.1.1 - LAT by Felix Kröhnert")
+#define LAT_VERSION F("Version.1.4 - LAT by Felix Kröhnert")
 #define LAT_HELP F("Please refer to the documentation here <link>")
 #define LAT_BAUD 115200
+#define WIFI_CONNDEFAULTTIME 20000
+#define WIFI_SCANDEFAULTTIME 10000
 
 /*
      * CMD - 0
@@ -28,11 +30,14 @@ typedef enum cmdmodes {
 class LAT8266Class {
   public:
   
-    char* WIFI_SSID = "";
-    char* WIFI_PSSWD = NULL;
-  
-    bool connect(unsigned int = 10000);
+    String WIFI_SSID = "";
+    void LAT8266_HIDE_PSSWD();    
 
+    bool connect(unsigned int = WIFI_CONNDEFAULTTIME, bool = false);
+    bool disconnect(unsigned int = WIFI_CONNDEFAULTTIME);
+    void scan(unsigned int = WIFI_SCANDEFAULTTIME);
+    void printLastScan();
+    
     void reflect(String);
 
     void loop_cmd();
@@ -55,15 +60,29 @@ class LAT8266Class {
     cmdmodes_t currentMode;
     
     WiFiClient client;
+  
+    String WIFI_PSSWD = "";
+
+    //command interaction
+    void cmdwifiSSID(char *pt);
+    /*
+      WRITE ONLY MODE CAN BE ENABLED BY CALLING LAT8266_HIDE_PSSWD() !!WARNING!! THIS CAN ONLY BE DONE ONCE BEFORE RESTARTING CHIP
+    */
+    bool LAT8266_HIDE_PSSWD_=false;
+    void cmdwifiPSSWD(char *pt);
+    void cmdwifiRSSI();
+    void cmdwifiCONN(char *pt);
+    void cmdwifiIP();
+    void cmdwifiSCAN(char *pt);
 
     /*
      * HTTP SECTION
-     * 
      * ################################*/
     String HTTP_host = "";
     String HTTP_type = "GET";
     String HTTP_path = "/";
     int HTTP_Port = 80;
+    bool toggleBuffer = true;
     HTTPContent httpHeader = HTTPContent(HTTP_HEADER);
     HTTPContent httpBody = HTTPContent(HTTP_BODY);
 
@@ -78,6 +97,7 @@ class LAT8266Class {
     void cmdhttpHeader(char *pt);
     void cmdhttpBody(char *pt);
     void cmdhttpCode();
+    void cmdhttpToggle(char *pt);
     
     /* ################################
      * HTTP SECTION
