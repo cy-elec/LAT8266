@@ -376,6 +376,7 @@ void LAT8266Class::httpUsingDefault() {
   /**/
   if(!httpHeaderInput.set(HTTP_type + " " + HTTP_path + " HTTP/1.1\r\n" +
                    "Host: " + HTTP_host + "\r\n" +
+                   "Connection: close\r\n" +
                    "\r\n"
                   ))
     return;
@@ -393,7 +394,7 @@ void LAT8266Class::httpRequest() {
     if (client.connect(HTTP_host, HTTP_Port))
     {
       String req = httpHeaderInput.toString().substring(0, httpHeaderInput.getSize()-2);
-      req+=(httpBodyInput.getSize()==0?"":"Content-length: "+String(httpBodyInput.getSize())+"\r\n")+"Connection: close\r\n\r\n";
+      req+=(httpBodyInput.getSize()==0?"":"Content-length: "+String(httpBodyInput.getSize())+"\r\n")+"\r\n";
       req+=httpBodyInput.toString();  
       client.print(req);
       

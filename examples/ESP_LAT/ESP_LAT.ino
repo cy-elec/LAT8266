@@ -22,7 +22,7 @@ void setup() {
 
     //push dummy request in raw mode
     LAT.setBody("{\"text\":\"This is the body\"}");
-    LAT.setHeader("PUT /put HTTP/1.1\r\nHost: httpbin.org\r\nContent-Type: application/json\r\n\r\n");
+    LAT.setHeader("PUT /put HTTP/1.1\r\nHost: httpbin.org\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n");
     LAT.reflect("hthost=httpbin.org;htrequest;htcode;htheader?;htbody?");
   }
 }
