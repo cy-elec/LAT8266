@@ -37,7 +37,6 @@ String HTTPContent::toString(bool h) {
 
 bool HTTPContent::addLine(String line) {
   int len = line.length();
-
   size+=len;
   char* tmp = (char*) realloc(raw, size+1);
   if(tmp == NULL) {
@@ -55,7 +54,7 @@ bool HTTPContent::set(String info) {
 
   if(len==0) {
     info="\0";
-    len=info.length();
+    len=0;
   }
   
   size=len;

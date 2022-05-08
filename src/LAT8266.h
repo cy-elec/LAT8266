@@ -31,7 +31,7 @@ class LAT8266Class {
     char* WIFI_SSID = "";
     char* WIFI_PSSWD = NULL;
   
-    bool connect(unsigned int);
+    bool connect(unsigned int = 10000);
 
     void reflect(String);
 

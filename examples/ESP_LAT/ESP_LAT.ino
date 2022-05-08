@@ -1,5 +1,6 @@
 /*
   ESP_LAT.ino - Example code for the LAT8266 library
+  -> reading time
 */
 
 #include <ESP8266WiFi.h>
@@ -12,7 +13,7 @@ void setup() {
   
   LAT.WIFI_SSID = "ILR8OURxtkEI8D1p";
   LAT.WIFI_PSSWD = "Z1I25SWOmgqY3rSw";
-  if(LAT.connect(5000)) {
+  if(LAT.connect()) {
     LAT.reflect("hthost=worldtimeapi.org;htpath=/api/timezone/Europe/Berlin;htdefault;htcode;htheader?;htbody?");
   }
 }

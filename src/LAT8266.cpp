@@ -160,13 +160,15 @@ void LAT8266Class::httpUsingDefault() {
     return;
   }
   /**/
-  httpHeader.set(HTTP_type + " " + HTTP_path + " HTTP/1.1\r\n" +
+  if(!httpHeader.set(HTTP_type + " " + HTTP_path + " HTTP/1.1\r\n" +
                    "Host: " + HTTP_host + "\r\n" +
                    "Connection: close\r\n" +
                    "\r\n"
-                  );
+                  ))
+    return;
   if(HTTP_type=="GET" || HTTP_type=="HEAD" || HTTP_type=="DELETE") {
-    httpBody.clear();
+    if(!httpBody.clear())
+      return;
   }
   httpRequest();
 }
@@ -179,25 +181,37 @@ void LAT8266Class::httpRequest() {
       req+=httpBody.toString();  
       client.print(req);
 
-      httpHeader.clear();
-      httpBody.clear();
-      bool writeBody=false;
-      while (client.connected() || client.available())
+      
+      bool writeBody=false, errored=false;
+      if(!httpHeader.clear())
+        errored=true;
+      if(!httpBody.clear())
+        errored=true;
+      while (!errored&& (client.connected() || client.available()))
       {
         if (client.available())
         {
           String line = client.readStringUntil('\n') + "\n";
           if(line != "\r\n")
-            if(writeBody)
-              httpBody.addLine(line);
-            else
-              httpHeader.addLine(line);
+            if(writeBody) {
+              if(!httpBody.addLine(line)) {
+                errored=true;
+                break;
+              }
+            }
+            else {
+              if(!httpHeader.addLine(line)) {
+                errored=true;
+                break;
+              }
+            }
           else
             writeBody=true; 
         }
       }
+      if(!errored)
+        Serial.println("OK");
       client.stop();
-      Serial.println("OK");
     }
     else
     {

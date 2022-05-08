@@ -21,7 +21,7 @@ class HTTPContent {
     HTTPContent();
     HTTPContent(HTTPType_t);
     
-    String toString(bool h = false);
+    String toString(bool = false);
     bool addLine(String);
     bool set(String);
     bool clear();
