@@ -1,5 +1,5 @@
 /*
-  ESP_LAT.ino - Example code
+  ESP_LAT.ino - Example code for the LAT8266 library
 */
 
 #include <ESP8266WiFi.h>
