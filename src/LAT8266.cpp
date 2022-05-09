@@ -390,7 +390,8 @@ void LAT8266Class::httpUsingDefault() {
 }
 
 void LAT8266Class::httpRequest() {
-  if (WiFi.status() == WL_CONNECTED) {
+  if (WiFi.status() == WL_CONNECTED)
+  {
     if (client.connect(HTTP_host, HTTP_Port))
     {
       String req = httpHeaderInput.toString().substring(0, httpHeaderInput.getSize()-2);
@@ -436,11 +437,10 @@ void LAT8266Class::httpRequest() {
       client.stop();
     }
     else
-    {
       Serial.println("ERROR REQUEST");
-      client.stop();
-    }
   }
+  else 
+    Serial.println("ERROR NOCONN");
 }
 
 bool LAT8266Class::readHeader() {
