@@ -2,7 +2,7 @@
    LAT8266.h - Light-weight Interface for ESP8266
    Copyright(c) 2022 Felix Kröhnert. All rights reserved.
 
-   This library is distributed under the terms of the <license> and WITHOUT ANY WARRANTY
+   This library is distributed under the terms of the MIT License and WITHOUT ANY WARRANTY
 */
 
 #ifndef LAT8266_H_
@@ -13,7 +13,7 @@
 #include "HTTPContent.h"
 
 #define LAT_VERSION F("Version.1.4 - LAT by Felix Kröhnert")
-#define LAT_HELP F("Please refer to the documentation here <link>")
+#define LAT_HELP F("Please refer to the documentation here https://github.com/Elec42/LAT8266/wiki")
 #define LAT_BAUD 115200
 #define WIFI_CONNDEFAULTTIME 20000
 #define WIFI_SCANDEFAULTTIME 10000
