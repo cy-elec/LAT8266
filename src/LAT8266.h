@@ -12,7 +12,7 @@
 #include <ESP8266WiFi.h>
 #include "HTTPContent.h"
 
-#define LAT_VERSION F("Version.1.4 - LAT by Felix Kröhnert")
+#define LAT_VERSION F("Version.1.4.2 - LAT by Felix Kröhnert")
 #define LAT_HELP F("Please refer to the documentation here https://github.com/Elec42/LAT8266/wiki")
 #define LAT_BAUD 115200
 #define WIFI_CONNDEFAULTTIME 20000
@@ -83,7 +83,6 @@ class LAT8266Class {
     void cmdwifiMAC();
     void cmdwifiNAME(char *pt);
     void cmdwifiAUTO(char *pt);
-    bool toggleAutoRecon = true;
     void cmdwifiAUTOSTART(char *pt);
     void cmdwifiSCAN(char *pt);
 

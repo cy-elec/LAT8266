@@ -8,7 +8,6 @@
 #include "LAT8266.h"
 
 LAT8266Class::LAT8266Class() {
-  WiFi.setAutoConnect(toggleAutoRecon);
 }
 
 bool LAT8266Class::connect(unsigned long timeout, bool silent) {
