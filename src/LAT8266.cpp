@@ -8,7 +8,7 @@
 #include "LAT8266.h"
 
 LAT8266Class::LAT8266Class() {
-  WiFi.setAutoConnect(toggleAutoCon);
+  WiFi.setAutoConnect(toggleAutoRecon);
 }
 
 bool LAT8266Class::connect(unsigned int timeout, bool silent) {
@@ -188,8 +188,8 @@ void LAT8266Class::cmdwifiAUTO(char *pt) {
     case MODE_SET: 
         while(*(pt++)!='\0');
         capitalizeStr(pt);
-        if(!strcmp(pt, "TRUE")) toggleAutoCon = true;
-        else if(!strcmp(pt, "FALSE")) toggleAutoCon = false;
+        if(!strcmp(pt, "TRUE")) WiFi.setAutoReconnect(true);
+        else if(!strcmp(pt, "FALSE")) WiFi.setAutoReconnect(false);
         else {
           Serial.println("ERROR VALUE");
           break;
@@ -197,13 +197,30 @@ void LAT8266Class::cmdwifiAUTO(char *pt) {
         Serial.println("OK");
         break;
     case MODE_GET: 
-        Serial.println(toggleAutoCon);
-        break;
+        Serial.println("ERROR NOCMD"); break;
     default: 
-        toggleAutoCon=!toggleAutoCon;
-        Serial.println("OK"); break;
+        Serial.println("ERROR NOCMD"); break;
   }
-  WiFi.setAutoConnect(toggleAutoCon);
+}
+
+void LAT8266Class::cmdwifiAUTOSTART(char *pt) {
+  switch(currentMode) {
+    case MODE_SET: 
+        while(*(pt++)!='\0');
+        capitalizeStr(pt);
+        if(!strcmp(pt, "TRUE")) WiFi.setAutoConnect(true);
+        else if(!strcmp(pt, "FALSE")) WiFi.setAutoConnect(false);
+        else {
+          Serial.println("ERROR VALUE");
+          break;
+        }
+        Serial.println("OK");
+        break;
+    case MODE_GET: 
+        Serial.println("ERROR NOCMD"); break;
+    default: 
+        Serial.println("ERROR NOCMD"); break;
+  }
 }
 
 void LAT8266Class::cmdwifiSCAN(char *pt) {
@@ -345,8 +362,11 @@ void LAT8266Class::processArg(char *src) {
   else if(!strcmp(src, "WIFINAME")) {       //WIFI Name
     cmdwifiNAME(src);
   }
-  else if(!strcmp(src, "WIFIAUTO")) {       //WIFI AutoConnect
+  else if(!strcmp(src, "WIFIAUTO")) {       //WIFI AutoReconnect
     cmdwifiAUTO(src);
+  }
+  else if(!strcmp(src, "WIFIAUTOSTART")) {       //WIFI AutoConnect
+    cmdwifiAUTOSTART(src);
   }
   else if(!strcmp(src, "WIFISCAN")) {       //WIFI SCAN
     cmdwifiSCAN(src);

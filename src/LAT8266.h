@@ -83,7 +83,8 @@ class LAT8266Class {
     void cmdwifiMAC();
     void cmdwifiNAME(char *pt);
     void cmdwifiAUTO(char *pt);
-    bool toggleAutoCon = true;
+    bool toggleAutoRecon = true;
+    void cmdwifiAUTOSTART(char *pt);
     void cmdwifiSCAN(char *pt);
 
     /*
