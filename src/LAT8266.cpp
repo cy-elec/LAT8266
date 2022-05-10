@@ -1,6 +1,6 @@
 /*
    LAT8266.cpp - Light-weight Interface for ESP8266
-   Copyright(c) 2022 Felix Kröhnert. All rights reserved.
+   Copyright (c) 2022 Felix Kröhnert. All rights reserved.
 
    This library is distributed under the terms of the MIT License and WITHOUT ANY WARRANTY
 */

@@ -4,3 +4,9 @@
 
 ## Can be directly importet to the ArduinoIDE
 To import this library, [download](https://github.com/Elec42/LAT8266/releases/latest) the latest release of the **LAT8266.zip** file and add it to the ArduinoIDE under *"Sketch->Include Library->Add .ZIP Library..."*.
+
+#
+### Author: [Felix Kröhnert](https://github.com/Elec42)
+
+### [Wiki](https://github.com/Elec42/LAT8266/wiki)
+### [LICENSE](https://github.com/Elec42/LAT8266/blob/main/LICENSE)
