@@ -11,8 +11,8 @@ LAT8266Class::LAT8266Class() {
   WiFi.setAutoConnect(toggleAutoRecon);
 }
 
-bool LAT8266Class::connect(unsigned int timeout, bool silent) {
-  int otim=timeout;
+bool LAT8266Class::connect(unsigned long timeout, bool silent) {
+  unsigned long otim=timeout;
   timeout+=millis();
   WiFi.mode(WIFI_STA);
 
@@ -50,7 +50,7 @@ bool LAT8266Class::connect(unsigned int timeout, bool silent) {
   return true;
 }
 
-bool LAT8266Class::disconnect(unsigned int timeout) {
+bool LAT8266Class::disconnect(unsigned long timeout) {
   timeout+=millis();
   while(WiFi.status()==WL_CONNECTED && millis()<timeout) {
     WiFi.disconnect();
@@ -60,8 +60,8 @@ bool LAT8266Class::disconnect(unsigned int timeout) {
   return true;
 }
 
-void LAT8266Class::scan(unsigned int timeout) {
-  int otim = timeout;
+void LAT8266Class::scan(unsigned long timeout) {
+  unsigned long otim = timeout;
   timeout+=millis();
 
   if(!disconnect(otim)) {
@@ -490,7 +490,7 @@ bool LAT8266Class::readHTTPContent(HTTPContent *c) {
     /*
     * Wait for input
     */  
-    int timeout=millis()+HTTP_READDEFAULTTIME;
+    unsigned long timeout=millis()+HTTP_READDEFAULTTIME;
     while(!Serial.available()) {
       if(millis()>=timeout) {
         Serial.println("ERROR TIMEDOUT");

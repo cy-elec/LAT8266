@@ -35,9 +35,9 @@ class LAT8266Class {
     String WIFI_SSID = "";
     void LAT8266_HIDE_PSSWD();    
 
-    bool connect(unsigned int = WIFI_CONNDEFAULTTIME, bool = false);
-    bool disconnect(unsigned int = WIFI_CONNDEFAULTTIME);
-    void scan(unsigned int = WIFI_SCANDEFAULTTIME);
+    bool connect(unsigned long = WIFI_CONNDEFAULTTIME, bool = false);
+    bool disconnect(unsigned long = WIFI_CONNDEFAULTTIME);
+    void scan(unsigned long = WIFI_SCANDEFAULTTIME);
     void printLastScan();
     
     void reflect(String);
