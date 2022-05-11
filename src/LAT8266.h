@@ -2,7 +2,7 @@
    LAT8266.h - Light-weight Interface for ESP8266
    Copyright (c) 2022 Felix Kröhnert. All rights reserved.
 
-   This library is distributed under the terms of the MIT License and WITHOUT ANY WARRANTY
+   This library is distributed under the terms of the GPL 3.0 License and WITHOUT ANY WARRANTY
 */
 
 #ifndef LAT8266_H_
