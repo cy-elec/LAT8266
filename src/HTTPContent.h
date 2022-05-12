@@ -2,7 +2,7 @@
    HTTPContent.h - Library for HTTP Header/Body processing
    Copyright (c) 2022 Felix Kröhnert. All rights reserved.
 
-   This library is distributed under the terms of the GPL 3.0 License and WITHOUT ANY WARRANTY
+   This library is distributed under the terms of the MIT License and WITHOUT ANY WARRANTY
 */
 
 #ifndef HTTPCONTENT_H_
