@@ -10,14 +10,17 @@
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 #include "HTTPContent.h"
 
-#define LAT_VERSION F("Version.1.4.2 - LAT by Felix Kröhnert")
+#define LAT_VERSION F("Version.1.4.4 - LAT by Felix Kröhnert")
 #define LAT_HELP F("Please refer to the documentation here https://github.com/Elec42/LAT8266/wiki")
 #define LAT_BAUD 115200
 #define WIFI_CONNDEFAULTTIME 20000
 #define WIFI_SCANDEFAULTTIME 10000
 #define HTTP_READDEFAULTTIME 1000
+#define HTTP_REQDEFAULTTIME 3000
+#define MDNS_DEFAULTNAMEPRE "LAT8266_"
 
 /*
      * CMD - 0
@@ -56,8 +59,12 @@ class LAT8266Class {
     bool setBody(String);
     int getHttpCode();
     void httpUsingDefault();
+    unsigned long glb_RequestTimeout = HTTP_REQDEFAULTTIME;
     void httpRequest();
     
+    String MAC;
+    String MDNSName;
+
   private:
 
     const static int maxInput = 1024;
@@ -104,6 +111,7 @@ class LAT8266Class {
     bool readHTTPContent(HTTPContent*);
 
     //command interaction
+    void cmdhttpTimeout(char *pt);
     void cmdhttpHost(char *pt);
     void cmdhttpPath(char *pt);
     void cmdhttpType(char *pt);
@@ -117,6 +125,20 @@ class LAT8266Class {
      * HTTP SECTION
      */
      
+    /*
+     * MDNS SECTION (to resolve name for http request)
+     * ################################*/
+
+    int mdnsQueryName(const char *, unsigned long = 2000);
+    char *mdnsService = (char*)malloc(5);
+    void cmdmdnsService(char *);
+    String toIP(unsigned long);
+    void cmdmdnsQueryName(char *);
+
+    /* ################################
+     * MDNS SECTION
+     */
+
     void processCmd();
     void processArg(char *);
     

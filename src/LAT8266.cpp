@@ -8,6 +8,11 @@
 #include "LAT8266.h"
 
 LAT8266Class::LAT8266Class() {
+  strcpy(mdnsService, "http");
+  
+  MAC = WiFi.macAddress();
+  MAC.replace(":","");
+  MDNSName = MDNS_DEFAULTNAMEPRE+MAC;
 }
 
 bool LAT8266Class::connect(unsigned long timeout, bool silent) {
@@ -39,13 +44,18 @@ bool LAT8266Class::connect(unsigned long timeout, bool silent) {
     Serial.println("ERROR TIMEDOUT");
     return false;
   }
+  
   if(!silent) {
     Serial.print("\nConnected, IP address: ");
     Serial.print(WiFi.localIP());
     Serial.print("(");
     Serial.print(WiFi.RSSI());
     Serial.println(")");
+    Serial.print("MDNS Name: ");
+    Serial.println(MDNSName);
   }
+  MDNS.begin(MDNSName);
+  
   return true;
 }
 
@@ -140,7 +150,7 @@ void LAT8266Class::cmdwifiCONN(char *pt) {
   switch(currentMode) {
     case MODE_SET: 
         while(*(pt++)!='\0');
-        if(connect(String(pt).toInt(), true))
+        if(connect(strtoul(pt, NULL, 0), true))
           Serial.println("OK");
         else
           Serial.println("ERROR TIMEDOUT");
@@ -226,7 +236,7 @@ void LAT8266Class::cmdwifiSCAN(char *pt) {
   switch(currentMode) {
     case MODE_SET: 
         while(*(pt++)!='\0');
-        scan(String(pt).toInt());
+        scan(strtoul(pt, NULL, 0));
         break;
     case MODE_GET: 
         printLastScan();
@@ -253,6 +263,7 @@ void LAT8266Class::loop_cmd() {
   /*
    * Wait for command
   */  
+  MDNS.update();
   if(!Serial.available()) return;
   input[currentPt] = Serial.read();
   currentPt++;
@@ -303,6 +314,9 @@ void LAT8266Class::processArg(char *src) {
   }
   else if(!strcmp(src, "HTREQUEST")) {    //HTTP Request
     httpRequest();
+  }
+  else if(!strcmp(src, "HTTIMEOUT")) {    //HTTP Timeout
+    cmdhttpTimeout(src);
   }
   else if(!strcmp(src, "HTDEFAULT")) {    //HTTP Default Request
     httpUsingDefault();
@@ -374,11 +388,20 @@ void LAT8266Class::processArg(char *src) {
     disconnect();
     Serial.println("OK");
   }
+  else if(!strcmp(src, "MDNSSERVICE")) {       //MDNS Service
+    cmdmdnsService(src);
+  }
+  else if(!strcmp(src, "MDNSQNAME")) {       //MDNS Query Name
+    cmdmdnsQueryName(src);
+  }
+  else if(!strcmp(src, "MDNSNAME")) {       //MDNS Host Name
+    Serial.println(MDNSName);
+  }
   else if(!strcmp(src, "REBOOT")) {       //reboot
     ESP.reset();
   }
 
-  
+
   else {
     Serial.print("ERROR ");
     Serial.println(src);
@@ -409,8 +432,29 @@ void LAT8266Class::httpUsingDefault() {
 }
 
 void LAT8266Class::httpRequest() {
+  
+  bool errored=false;
+  if(toggleBuffer) {
+    if(!httpHeader.clear())
+      errored=true;
+    if(!httpBody.clear())
+      errored=true;
+  }
+  
   if (WiFi.status() == WL_CONNECTED)
   {
+    unsigned long endtimeout = glb_RequestTimeout?millis()+glb_RequestTimeout:0;
+
+    if(HTTP_host.endsWith(".local")) {
+      int n = mdnsQueryName(HTTP_host.c_str(), glb_RequestTimeout);
+      if(n == -1) {
+        Serial.println("ERROR MDNSQ");
+        return;
+      }
+      HTTP_Port = MDNS.port(n);
+      HTTP_host = toIP(MDNS.IP(n));
+    }
+
     if (client.connect(HTTP_host, HTTP_Port))
     {
       String req = httpHeaderInput.toString().substring(0, httpHeaderInput.getSize()-2);
@@ -418,17 +462,12 @@ void LAT8266Class::httpRequest() {
       req+=httpBodyInput.toString();  
       client.print(req);
       
-      bool writeBody=false, errored=false;
-      if(toggleBuffer) {
-        if(!httpHeader.clear())
-          errored=true;
-        if(!httpBody.clear())
-          errored=true;
-      }
-      while (!errored&& (client.connected() || client.available()))
+      bool writeBody=false;
+      while (!errored && (client.connected() || client.available()) && (glb_RequestTimeout == 0 || millis()<endtimeout))
       {
         if (client.available())
         {
+          endtimeout = glb_RequestTimeout?millis()+glb_RequestTimeout:0;
           String line = client.readStringUntil('\n') + "\n";
           if(toggleBuffer) {
             if(line != "\r\n")
@@ -451,7 +490,12 @@ void LAT8266Class::httpRequest() {
             Serial.print(line);
         }
       }
-      if(!errored&&toggleBuffer)
+      if(glb_RequestTimeout!=0 && httpHeader.getSize()==0 && millis()>=endtimeout) {
+        Serial.println("ERROR TIMEDOUT");
+      }
+      else if(httpHeader.getSize()==0||errored||!WiFi.isConnected())
+        Serial.println("ERROR CANCELLED");
+      else if(toggleBuffer)
         Serial.println("OK");
       client.stop();
     }
@@ -460,6 +504,20 @@ void LAT8266Class::httpRequest() {
   }
   else 
     Serial.println("ERROR NOCONN");
+}
+
+void LAT8266Class::cmdhttpTimeout(char *pt) {
+  switch(currentMode) {
+    case MODE_SET: 
+        while(*(pt++)!='\0');
+        glb_RequestTimeout = strtoul(pt, NULL, 0);
+        Serial.println("OK");
+        break;
+    case MODE_GET: 
+        Serial.println(glb_RequestTimeout);
+        break;
+    default: Serial.println("ERROR NOCMD"); break;
+  }
 }
 
 bool LAT8266Class::readHeader() {
@@ -558,7 +616,7 @@ void LAT8266Class::cmdhttpPort(char *pt) {
   switch(currentMode) {
     case MODE_SET: 
         while(*(pt++)!='\0');
-        HTTP_Port = String(pt).toInt();
+        HTTP_Port = atoi(pt);
         Serial.println("OK");
         break;
     case MODE_GET: 
@@ -608,6 +666,95 @@ void LAT8266Class::cmdhttpToggle(char *pt) {
         toggleBuffer=!toggleBuffer;
         Serial.println("OK"); break;
   }
+}
+
+int LAT8266Class::mdnsQueryName(const char *name_, unsigned long timeout) {
+
+  char *name = (char*)malloc(strlen(name_));
+  if(!name) {
+    Serial.println("ERROR ALLOCQ");
+    return -1;
+  }
+  strcpy(name, name_);
+  bool lset = false;
+  int l = strlen(name);
+  if(!strcmp(name+(l-6), ".local")) {
+    name[l-6] = '\0';
+  }
+
+  timeout += millis();
+  int res = -1;
+  
+  if(!MDNS.begin(MDNSName)) {
+    Serial.println("ERROR MDNSBEGIN");
+    return -1;
+  }
+  
+  while(millis()<timeout && res==-1) {
+    //try tcp
+    int n = MDNS.queryService(mdnsService, "tcp");
+    if(n==0)
+      n = MDNS.queryService(mdnsService, "udp");
+    if(n!=0) {
+      for(int i=0; i<n; i++) {
+        if(!strcmp(name, MDNS.hostname(i).substring(0, MDNS.hostname(i).length()-6).c_str())) {
+          res = i;
+          break;
+        }
+      }
+    }
+  }
+
+  return res;
+}
+
+void LAT8266Class::cmdmdnsService(char *pt) {
+  char *tmp;
+  switch(currentMode) {
+    case MODE_SET: 
+        while(*(pt++)!='\0');
+        tmp = (char*)realloc(mdnsService, strlen(pt));
+        if(!tmp) {
+          Serial.println("ERROR ALLOCM");
+        }
+        else {
+          mdnsService = tmp;
+          strcpy(mdnsService, pt);
+          Serial.println("OK");
+        }
+        break;
+    case MODE_GET: 
+        Serial.println(mdnsService);
+        break;
+    default: 
+        Serial.println("ERROR NOCMD"); break;
+  }
+}
+
+String LAT8266Class::toIP(unsigned long lip) {
+  int a = lip%256;
+  lip=lip>>8;
+  int b = lip%256;
+  lip=lip>>8;
+  int c = lip%256;
+  lip=lip>>8;
+  int d = lip%256;
+  return String(a)+"."+String(b)+"."+String(c)+"."+String(d);
+}
+
+void LAT8266Class::cmdmdnsQueryName(char *pt) {
+  if(currentMode!=MODE_SET) {
+    Serial.println("ERROR NOCMD");
+    return;
+  }
+  while(*(pt++)!='\0');
+    
+  int n = mdnsQueryName(pt);
+  if(n == -1) {
+    Serial.println("ERROR MDNSQ");
+    return;
+  }
+  Serial.printf("%s:%d\n", toIP(MDNS.IP(n)).c_str(), MDNS.port(n));
 }
 
 void LAT8266Class::printHeader() {
