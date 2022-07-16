@@ -312,7 +312,7 @@ void LAT8266Class::processArg(char *src) {
     Serial.println(LAT_VERSION);
   }
   else if(!strcmp(src, "HELP")) {     //HELP
-    Serial.println(LAT_HELP);
+    Serial.println(LAT_HELP + MDNSName + ":82/");
   }
   else if(!strcmp(src, "HTREQUEST")) {    //HTTP Request
     httpRequest();

@@ -6,15 +6,18 @@
 #include <ESP8266WiFi.h>
 #include <LAT8266.h>
 
+#define SSID YOUR-WIFI-SSID
+#define PASSWD YOUR-WIFI-PASSWD
+
 void setup() {
   Serial.begin(LAT_BAUD); //enable Serial with 115200 BAUD. This can, however, be changed at will
   delay(500);
   Serial.println();
   
   LAT.LAT8266_HIDE_PASSWD(); //disable read access of password
-  LAT.WIFI_SSID = "ILR8OURxtkEI8D1p"; //setting SSID
+  LAT.WIFI_SSID = SSID; //setting SSID
   //Need to reflect the password as it is not accessibly from the code directly
-  LAT.reflect("wifipasswd = Z1I25SWOmgqY3rSw");
+  LAT.reflect("wifipasswd = "+PASSWD);
   //Connect with default timeout (20s)
   if(LAT.connect()) {
     //push a simple http request to optain the time in Berlin
