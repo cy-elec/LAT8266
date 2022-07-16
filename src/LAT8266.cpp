@@ -13,9 +13,11 @@ LAT8266Class::LAT8266Class() {
   MAC = WiFi.macAddress();
   MAC.replace(":","");
   MDNSName = MDNS_DEFAULTNAMEPRE+MAC;
+  WebServerInit();
 }
 
 bool LAT8266Class::connect(unsigned long timeout, bool silent) {
+
   unsigned long otim=timeout;
   timeout+=millis();
   WiFi.mode(WIFI_STA);
@@ -28,8 +30,8 @@ bool LAT8266Class::connect(unsigned long timeout, bool silent) {
     Serial.println("ERROR SSID");
     return false;
   }
-  if(WIFI_PSSWD!="")
-    WiFi.begin(WIFI_SSID, WIFI_PSSWD);
+  if(WIFI_PASSWD!="")
+    WiFi.begin(WIFI_SSID, WIFI_PASSWD);
   else
     WiFi.begin(WIFI_SSID);
   if(!silent)
@@ -122,21 +124,21 @@ void LAT8266Class::cmdwifiSSID(char *pt) {
   }
 }
 
-void LAT8266Class::LAT8266_HIDE_PSSWD() {
-  LAT8266_HIDE_PSSWD_=true;
+void LAT8266Class::LAT8266_HIDE_PASSWD() {
+  LAT8266_HIDE_PASSWD_=true;
 }
-void LAT8266Class::cmdwifiPSSWD(char *pt) {
+void LAT8266Class::cmdwifiPASSWD(char *pt) {
   switch(currentMode) {
     case MODE_SET: 
         while(*(pt++)!='\0');
-        WIFI_PSSWD = String(pt);
+        WIFI_PASSWD = String(pt);
         Serial.println("OK");
         break;
     case MODE_GET: 
-        if(LAT8266_HIDE_PSSWD_)
+        if(LAT8266_HIDE_PASSWD_)
           Serial.println("ERROR ACCESS");
         else
-          Serial.println(WIFI_PSSWD);
+          Serial.println(WIFI_PASSWD);
         break;
     default: Serial.println("ERROR NOCMD"); break;
   }
@@ -354,8 +356,8 @@ void LAT8266Class::processArg(char *src) {
   else if(!strcmp(src, "WIFISSID")) {     //WIFI SSID
     cmdwifiSSID(src);
   }
-  else if(!strcmp(src, "WIFIPSSWD")) {     //WIFI PSSWD
-    cmdwifiPSSWD(src);
+  else if(!strcmp(src, "WIFIPASSWD")) {     //WIFI PASSWD
+    cmdwifiPASSWD(src);
   }
   else if(!strcmp(src, "WIFIRSSI")) {     //WIFI RSSI
     cmdwifiRSSI();

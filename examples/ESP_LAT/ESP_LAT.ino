@@ -11,10 +11,10 @@ void setup() {
   delay(500);
   Serial.println();
   
-  LAT.LAT8266_HIDE_PSSWD(); //disable read access of password
+  LAT.LAT8266_HIDE_PASSWD(); //disable read access of password
   LAT.WIFI_SSID = "ILR8OURxtkEI8D1p"; //setting SSID
   //Need to reflect the password as it is not accessibly from the code directly
-  LAT.reflect("wifipsswd = Z1I25SWOmgqY3rSw");
+  LAT.reflect("wifipasswd = Z1I25SWOmgqY3rSw");
   //Connect with default timeout (20s)
   if(LAT.connect()) {
     //push a simple http request to optain the time in Berlin

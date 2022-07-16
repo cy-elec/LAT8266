@@ -11,6 +11,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
+#include "WebServer.h"
 #include "HTTPContent.h"
 
 #define LAT_VERSION F("Version.1.4.4 - LAT by Felix Kröhnert")
@@ -36,7 +37,7 @@ class LAT8266Class {
     LAT8266Class();
 
     String WIFI_SSID = "";
-    void LAT8266_HIDE_PSSWD();    
+    void LAT8266_HIDE_PASSWD();    
 
     bool connect(unsigned long = WIFI_CONNDEFAULTTIME, bool = false);
     bool disconnect(unsigned long = WIFI_CONNDEFAULTTIME);
@@ -74,15 +75,15 @@ class LAT8266Class {
     
     WiFiClient client;
   
-    String WIFI_PSSWD = "";
+    String WIFI_PASSWD = "";
 
     //command interaction
     void cmdwifiSSID(char *pt);
     /*
-      WRITE ONLY MODE CAN BE ENABLED BY CALLING LAT8266_HIDE_PSSWD() !!WARNING!! THIS CAN ONLY BE DONE ONCE BEFORE RESTARTING CHIP
+      WRITE ONLY MODE CAN BE ENABLED BY CALLING LAT8266_HIDE_PASSWD() !!WARNING!! THIS CAN ONLY BE DONE ONCE BEFORE RESTARTING CHIP
     */
-    bool LAT8266_HIDE_PSSWD_=false;
-    void cmdwifiPSSWD(char *pt);
+    bool LAT8266_HIDE_PASSWD_=false;
+    void cmdwifiPASSWD(char *pt);
     void cmdwifiRSSI();
     void cmdwifiCONN(char *pt);
     void cmdwifiIP();
