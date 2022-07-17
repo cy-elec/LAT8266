@@ -3,7 +3,6 @@
   -> reading time
 */
 
-#include <ESP8266WiFi.h>
 #include <LAT8266.h>
 
 #define SSID YOUR-WIFI-SSID
