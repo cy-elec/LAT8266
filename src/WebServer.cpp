@@ -7,6 +7,7 @@
 
 #include "WebServer.h"
 #include "WebServerSrc"
+
 AsyncWebServer server(82);
 
 void WebServerInit() {
@@ -30,6 +31,12 @@ void WebServerInit() {
 String processor(const String& var){
   if(var == "IP"){
     return String(WiFi.localIP().toString());
+  }
+  if(var == "VERSION") {
+	return String(LAT_VERSION);
+  }
+  if(var == "") {
+
   }
   return String();
 }

@@ -9,6 +9,7 @@
 #define HTTPCONTENT_H_
 
 #include <Arduino.h>
+#include "PREDEFINE.h"
 
 typedef enum HTTPType
 {

@@ -1,3 +1,3 @@
 function init() {
-    console.log("Test running...")
+    console.log("Initialized...")
 }
