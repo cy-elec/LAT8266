@@ -74,6 +74,7 @@ bool LAT8266Class::disconnect(unsigned long timeout) {
 void LAT8266Class::scan(unsigned long timeout) {
   unsigned long otim = timeout;
   timeout+=millis();
+  int isConnected = WiFi.isConnected();
 
   if(!disconnect(otim)) {
     Serial.println("ERROR TIMEDOUT");
@@ -86,13 +87,15 @@ void LAT8266Class::scan(unsigned long timeout) {
   while((n=WiFi.scanComplete())<0 && millis()<timeout) {
     delay(100);
   }
-  if(millis()<timeout) {
-    if(connect(timeout-millis(), true)&&n>0) {
-      Serial.println(n);
-    }
+  if(isConnected) {
+	if(millis()<timeout) {
+		if(connect(timeout-millis(), true)&&n>0) {
+		Serial.println(n);
+		}
+	}
+	else
+		Serial.println("ERROR TIMEDOUT_NOCONN");
   }
-  else
-    Serial.println("ERROR TIMEDOUT_NOCONN");
 }
 
 void LAT8266Class::printLastScan() {
@@ -154,8 +157,6 @@ void LAT8266Class::cmdwifiCONN(char *pt) {
         while(*(pt++)!='\0');
         if(connect(strtoul(pt, NULL, 0), true))
           Serial.println("OK");
-        else
-          Serial.println("ERROR TIMEDOUT");
         break;
     case MODE_GET: 
         Serial.println(WiFi.isConnected());
@@ -163,8 +164,6 @@ void LAT8266Class::cmdwifiCONN(char *pt) {
     default: 
         if(connect(WIFI_CONNDEFAULTTIME, true))
           Serial.println("OK");
-        else
-          Serial.println("ERROR TIMEDOUT");
         break;
   }
 }
@@ -228,7 +227,7 @@ void LAT8266Class::cmdwifiAUTOSTART(char *pt) {
         Serial.println("OK");
         break;
     case MODE_GET: 
-        Serial.println("ERROR NOCMD"); break;
+        Serial.println(WiFi.getAutoConnect()); break;
     default: 
         Serial.println("ERROR NOCMD"); break;
   }
@@ -239,7 +238,7 @@ void LAT8266Class::cmdwifiSCAN(char *pt) {
     case MODE_SET: 
         while(*(pt++)!='\0');
         scan(strtoul(pt, NULL, 0));
-        break;
+        break; 
     case MODE_GET: 
         printLastScan();
         break;
@@ -312,7 +311,7 @@ void LAT8266Class::processArg(char *src) {
     Serial.println(LAT_VERSION);
   }
   else if(!strcmp(src, "HELP")) {     //HELP
-    Serial.println(LAT_HELP + MDNSName + ":82/");
+    Serial.println(LAT_HELP + (WiFi.isConnected()?String(" or here http://" + MDNSName + ":82/"):""));
   }
   else if(!strcmp(src, "HTREQUEST")) {    //HTTP Request
     httpRequest();
@@ -414,7 +413,7 @@ void LAT8266Class::processArg(char *src) {
 
 void LAT8266Class::httpUsingDefault() {
   if(HTTP_host == "" || HTTP_path == "") {
-    Serial.println("ERROR INCOMPlETE");
+    Serial.println("ERROR INCOMPLETE");
     return;
   }
   /**/

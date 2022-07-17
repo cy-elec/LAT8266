@@ -14,3 +14,5 @@ To import this library, [download](https://github.com/Elec42/LAT8266/releases/la
 This library depends on following external libraries:
   * Arduino.h
   * ESP8266WiFi.h
+  * ESP8266mDNS.h
+  * ESPAsyncWebServer.h
