@@ -56,7 +56,10 @@ bool LAT8266Class::connect(unsigned long timeout, bool silent) {
     Serial.print("MDNS Name: ");
     Serial.println(MDNSName);
   }
-  MDNS.begin(MDNSName);
+  if(!MDNS.begin(MDNSName) && MDNSName!=(MDNS_DEFAULTNAMEPRE+MAC)) {
+	MDNSName = MDNS_DEFAULTNAMEPRE+MAC;
+  	MDNS.begin(MDNSName);
+  }
   
   return true;
 }
