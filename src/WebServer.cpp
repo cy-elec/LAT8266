@@ -28,12 +28,23 @@ void WebServerInit() {
 	server.begin();
 }
 
+String htmlFormat(String var) {
+	var.replace("ö", "&ouml;");
+	var.replace("ä", "&uuml;");
+	var.replace("ü", "&auml;");
+	var.replace("Ö", "&Ouml;");
+	var.replace("Ä", "&Auml;");
+	var.replace("Ü", "&Uuml;");
+	var.replace("ß", "&szlig;");
+	return var;
+}
+
 String processor(const String& var){
   if(var == "IP"){
     return String(WiFi.localIP().toString());
   }
   if(var == "VERSION") {
-	return String(LAT_VERSION);
+	return String(htmlFormat(LAT_VERSION));
   }
   if(var == "") {
 
