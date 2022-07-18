@@ -25,7 +25,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 		<script src="scripts.js"></script>
     </head>
 
-    <body onload="init()" style="background: var(--color1)">
+    <body onload="init()" style="background: var(--color2)">
 
 		<!-- Header -->
 		<header>
@@ -47,8 +47,348 @@ const char index_html[] PROGMEM = R"rawliteral(
 			<main>
 				<h2 class="border">Info Section</h2>
 
-				<div>
-					<p>Test Paragraph2</p>
+				<div id="Commands_Functions" style="text-align: left;">
+					<h4></h4>
+					<p class="line"></p>
+
+					All commands can be categorized into three different groups, which are labeled 1 to 3 respectively.<br>
+					<ol>
+					<li>Command Mode → executed by just printing the command<br>
+					The command mode will just execute the specified command</li>
+					<li>Query Mode → executed when adding a<code>?</code> after the command<br>
+					The query mode will not execute the command, but return it's current settings</li>
+					<li>Set Mode → executed when adding a<code>=</code> after the command, followed by the value to be set<br>
+					The set mode will not execute the command, but set the specified settings<br>
+					<b>!! Attention !!</b> Strings are not encapsulated by<code>"</code>. Spaces in Strings have to be escaped by a<code>\</code>.</li>
+					</ol>
+
+					Commands may be chained with the separator<code>;</code>
+
+					<h3>Booleans</h3>
+					<ul>
+					<li><code>True = SUCCESS</code></li>
+					<li><code>False = FAILURE</code></li>
+					</ul>
+
+					<h4>One must always invoke loop_cmd() - see Functions table down below</h4>
+
+					<p class="line"></p>
+
+					<h2 class="underline">Commands</h2>
+					
+					<p align="center" >
+					<span><u>LAT 1</u></span><br>
+					<span>Simple Test Command that echoes <code>OK</code></span><br><br>
+					<span><u>VER 1</u></span><br>
+					<span>Print version info</span><br><br>
+					<span><u>HELP 1</u></span><br>
+					<span>Print links to this wiki and an on-board WebPage</span><br><br>
+					</p>
+
+					<p class="line"></p>
+
+					<p align="center" >
+					<span><u>HTREQUEST 1</u></span><br>
+					<span>Request an HTTP request using the loaded Header and Body.<br>Note that one has to specify HTHOST and HTPORT as well</span><br><br>
+					<span><u>HTTIMEOUT 23</u></span><br>
+					<span>Set the timeout for each HT operation in ms</span><br><br>
+					<span><u>HTDEFAULT 1</u></span><br>
+					<span>Request an HTTP request using a default header.<br>Use HTHOST, HTTYPE, HTPATH and HTPORT beforehand to set the necessary values</span><br><br>
+					<span><u>HTHOST 23</u></span><br>
+					<span>Set the HTTP host.<br>This will be used in HTDEFAULT and HTREQUEST to connect to the specified host</span><br><br>
+					<span><u>HTPATH 23</u></span><br>
+					<span>Set the path of the next HTTP request.<br>This will be used in HTDEFAULT</span><br><br>
+					<span><u>HTTYPE 23</u></span><br>
+					<span>Set the HTTP Request Type.<br>This will be used in HTDEFAULT</span><br><br>
+					<span><u>HTPORT 23</u></span><br>
+					<span>Set the port to connect to.<br>This will be used in HTDEFAULT and HTREQUEST to connect to the specified host</span><br><br>
+					<span><u>HTHEADER 23</u></span><br>
+					<span>Set the HTTP request Header manually.<br>To set the header, initiate the command with <code>HTHEADER=</code> and wait for the response <code>READ</code>.<br>Then transmit the whole header over UART.</span><br><br>
+					<span><u>HTBODY 23</u></span><br>
+					<span>Set the HTTP request Body manually.<br>To set the body, initiate the command with <code>HTBODY=</code> and wait for the response <code>READ</code>.<br>Then transmit the whole body over UART.</span><br><br>
+					<span><u>HTHEADERIN 12</u></span><br>
+					<span>Get the HTTP response header</span><br><br>
+					<span><u>HTBODYIN 12</u></span><br>
+					<span>Get the HTTP response body</span><br><br>
+					<span><u>HTCODE 12</u></span><br>
+					<span>Get the HTTP response code</span><br><br>
+					<span><u>HTBUFFER 123</u></span><br>
+					<span>Toggle the HTTP internal buffer on or off.<br>When disabled, incoming header and body will be printed to UART immediately and not saved internally.<br>VALUES <code>TRUE | FALSE</code></span><br><br>
+					</p>
+
+					<p class="line"></p>
+
+					<p align="center" >
+					<span><u>WIFISSID 23</u></span><br>
+					<span>Set or Query the Wi-Fi SSID</span><br><br>
+					<span><u>WIFIPASSWD 23</u></span><br>
+					<span>Set or Query the Wi-Fi Password.<br>Read access can be disabled by calling <code>LAT8266_HIDE_PASSWD()</code></span><br><br>
+					<span><u>WIFIRSSI 12</u></span><br>
+					<span>Query RSSI</span><br><br>
+					<span><u>WIFICONN 123</u></span><br>
+					<span>Query connection or Connect to Wi-Fi.<br>Set-Mode: Set Timeout in ms</span><br><br>
+					<span><u>WIFIIP 12</u></span><br>
+					<span>Query Wi-Fi IP</span><br><br>
+					<span><u>WIFICHNL 12</u></span><br>
+					<span>Query Wi-Fi channel</span><br><br>
+					<span><u>WIFIMAC 12</u></span><br>
+					<span>Query Mac Address</span><br><br>
+					<span><u>WIFINAME 123</u></span><br>
+					<span>Set or Query Wi-Fi Name</span><br><br>
+					<span><u>WIFIAUTO 3</u></span><br>
+					<span>Set Wi-Fi auto-reconnect - VALUES <code>TRUE | FALSE</code></span><br><br>
+					<span><u>WIFIAUTOSTART 23</u></span><br>
+					<span>Set or Query Wi-Fi auto-connect on startup - connection to previously established Wi-Fi network.<br>VALUES <code>TRUE | FALSE</code></span><br><br>
+					<span><u>WIFISCAN 123</u></span><br>
+					<span>Scan networks or Query last scan.<br> Set-Mode: Provide timeout in ms and execute</span><br><br>
+					<span><u>WIFIDISC 1</u></span><br>
+					<span>Disconnect from Wi-Fi network</span><br><br>
+					</p>
+
+					<p class="line"></p>
+
+					<p align="center" >
+					<span><u>MDNSSERVICE 23</u></span><br>
+					<span>Set or Query MDNS Service</span><br><br>
+					<span><u>MDNSQNAME 3</u></span><br>
+					<span>Query provided MDNS Name and display IP and Port of said device</span><br><br>
+					<span><u>MDNSNAME 12</u></span><br>
+					<span>Query own MDNS Name</span><br><br>
+					</p>
+
+					<p class="line"></p>
+
+					<p align="center" >
+					<span><u>REBOOT</u></span><br>
+					<span>Reboot/Reset the whole chip.<br>This also means that previously changed, and volatile memory blocks will be cleared.<br>E.g. user input, Wi-Fi connection, etc.</span><br><br>
+					</p>
+
+					<p class="line"></p>
+
+					<h2 class="underline">Functions and Global Variables</h2>
+					<table style="margin-left: auto;margin-right: auto;">
+					<tr>
+						<th> Function Name </th>
+						<th> Description </th>
+						<th> Return Value </th>
+					</tr>
+					<tr>
+						<td> LAT8266_HIDE_PASSWD(void)  </td>
+						<td> Disable password query. Cannot be disabled until reboot  </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> connect(WIFI_CONNDEFAULTTIME, SILENT_MODE) </td>
+						<td> Connect to a specified network.<br>WIFI_CONNDEFAULTTIME - timeout in ms<br>SILENT_MODE - reduce output on UART</td>
+						<td> bool </td>
+					</tr>
+					<tr>
+						<td> disconnect(WIFI_CONNDEFAULTTIME) </td>
+						<td> Disconnect from current Wi-Fi network.<br>WIFI_CONNDEFAULTTIME - timeout in ms </td>
+						<td> bool </td>
+					</tr>
+					<tr>
+						<td> scan(WIFI_SCANDEFAULTTIME) </td>
+						<td> Scan for other Wi-Fi Networks.<br>WIFI_SCANDEFAULTTIME - timeout in ms </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> printLastScan(void) </td>
+						<td> Print last scan to UART </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> reflect(String) </td>
+						<td> Invoke UART commands from within code by supplying a command chain.<br>Syntax is the same as the normal UART Command syntax </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> loop_cmd(void) </td>
+						<td> <b>HAS TO BE CALLED IN THE MAIN LOOP TO WORK PROPERLY</b> </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> printHeader(void) </td>
+						<td> Print request header to UART </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> printBody(void) </td>
+						<td> Print request body to UART </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> printHeaderInput(void) </td>
+						<td> Print response header to UART </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> printBodyInput(void) </td>
+						<td> Print response body to UART </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> setHeader(String) </td>
+						<td> Set request header</td>
+						<td> bool </td>
+					</tr>
+					<tr>
+						<td> setBody(String) </td>
+						<td> Set request body </td>
+						<td> bool </td>
+					</tr>
+					<tr>
+						<td> getHttpCode(void) </td>
+						<td> Get response code </td>
+						<td> int </td>
+					</tr>
+					<tr>
+						<td> httpUsingDefault(void) </td>
+						<td> Invoke HTTP Request using the default command </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> httpRequest(void) </td>
+						<td> Invoke a manual HTTP Request </td>
+						<td> void </td>
+					</tr>
+					<tr>
+						<td> VAR: glb_RequestTimeout </td>
+						<td> HTTP Request timeout</td>
+						<td> unsigned long </td>
+					</tr>
+					<tr>
+						<td> VAR: MAC </td>
+						<td> Holds device MAC Address. Modifying won't change anything </td>
+						<td> String </td>
+					</tr>
+					<tr>
+						<td> VAR: MDNSName </td>
+						<td> Holds MDNS Name. Modifying won't have an impact until reconnecting </td>
+						<td> String </td>
+					</tr>
+					</table>
+
+				</div>
+				<div id="Error_Codes" style="text-align: left;">
+					<h2 class="underline"> Error Codes and Issues </h1>
+					<table style="margin-left: auto;margin-right: auto;">
+						<tr>
+							<td> SECTION </td>
+							<td> Error Code </td>
+							<td> Issue </td>
+						</tr>
+						<tr>
+							<td> * </td>
+							<td> ERROR xxx  </td>
+							<td> xxx ~ invoked command -> command not recognized </td>
+						</tr>
+						<tr>
+							<td> * </td>
+							<td> ERROR NOCMD </td>
+							<td> there is no command option available for the specified command - refer to [[Commands, Functions and Variables]] </td>
+						</tr>
+						<tr>
+							<td> * </td>
+							<td> ERROR VALUE </td>
+							<td> the provided value is not applicable to the command </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR INCOMPLETE </td>
+							<td> HTDEFAULT either HOST or PATH is missing </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR BODYFOUND </td>
+							<td> HTDEFAULT requesting query type and cannot clear body - HTTP bad request </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR MDNSQ </td>
+							<td> HTREQUEST cannot resolve mdns host </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR TIMEDOUT </td>
+							<td> HTREQUEST exceeded glb_RequestTimeout </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR CANCELLED </td>
+							<td> HTREQUEST connection closed </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR REQUEST </td>
+							<td> HTREQUEST could not connect to host </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR NOCONN </td>
+							<td> HTREQUEST not connected to the internet </td>
+						</tr>
+						<tr>
+							<td> HTTP </td>
+							<td> ERROR TIMEDOUT </td>
+							<td> HTHEADER or HTBODY timed out before reading end of header/body </td>
+						</tr>
+						<tr>
+							<td> MDNS </td>
+							<td> ERROR ALLOCQ </td>
+							<td> MDNSQNAME could not allocate memory </td>
+						</tr>
+						<tr>
+							<td> MDNS </td>
+							<td> ERROR MDNSBEGIN </td>
+							<td> MDNSQNAME could not start mdns service </td>
+						</tr>
+						<tr>
+							<td> MDNS </td>
+							<td> ERROR ALLOCM </td>
+							<td> MDNSSERVICE could not allocate memory </td>
+						</tr>
+						<tr>
+							<td> MDNS </td>
+							<td> ERROR MDNSQ </td>
+							<td> MDNSQNAME cannot resolve mdns name </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR TIMEDOUT </td>
+							<td> WIFICONN exceeded provided timeout </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR SSID </td>
+							<td> WIFICONN missing SSID </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR TIMEDOUT </td>
+							<td> WIFISCAN exceeded provided timeout </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR TIMEDOUT_NOCONN </td>
+							<td> WIFISCAN exceeded provided timeout or failed to reconnect </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR NOSCAN </td>
+							<td> WIFISCAN? invoked query before execution </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR SCANNING </td>
+							<td> WIFISCAN failed to scan </td>
+						</tr>
+						<tr>
+							<td> WIFI </td>
+							<td> ERROR ACCESS </td>
+							<td> WIFIPASSWD? read access has been disabled </td>
+						</tr>
+					</table>
 				</div>
 			</main>
 		</div>
@@ -67,7 +407,6 @@ const char styles_css[] PROGMEM = R"rawliteral(
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--color1: #000000;
 		--color2: #0a0a0a;
 		--color3: #fffab575;
 		--color4: #a0a0a0;
@@ -79,7 +418,6 @@ const char styles_css[] PROGMEM = R"rawliteral(
 }
 @media (prefers-color-scheme: light) {
 	:root {
-		--color1: #f4f4f9;
 		--color2: #b8dbd9;
 		--color3: #586f7c;
 		--color4: #2f4550;
@@ -96,10 +434,8 @@ const char styles_css[] PROGMEM = R"rawliteral(
 }
 
 html, body {
-	width: 100%;
-	height: 100%;
 	margin: 0;
-	min-width: 300px;
+	min-width: 400px;
 }
 
 header {
@@ -119,25 +455,70 @@ header {
 /*container for both sides*/
 .row {
 	display: flex;
-	flex-wrap: wrap;
-	text-align: center;
+	font-size: larger;
 	color: var(--color8);
 	height: 100%;
-	font-size: larger;
+	text-align: center;
 }
 
 /*left side*/
 .side {
-	flex: 25%;
+	flex: 1%;
 	background-color: var(--color6);
 	padding: 20px;
 }
 
 /*info side*/
 main {
-	flex: 75%;
+	flex: 80%;
 	background-color: var(--color7);
 	padding: 20px;
+}
+
+
+code {
+	padding: 2px;
+	margin: 2px;
+	border-style: solid;
+	border-radius: 5px;
+	background-color: var(--color2);
+	border-color: var(--color7);
+}
+
+
+.line {
+	border: 2px solid;
+	border-radius: 10px;
+	border-color: var(--color6);
+	background-color: var(--color6);
+}
+.underline {
+	border-bottom: 1px solid;
+	border-color: var(--color6);
+}
+
+table{
+	border: 1px solid;
+	border-radius: 5px;
+	border-color: var(--color2);
+	border-collapse: collapse;
+}
+td, th {
+	border: 1px solid;
+	border-color: var(--color2);
+	text-align: left;
+	font-size: smaller;
+	padding: 5px 8px;
+}
+tr:nth-child(even) {
+	background-color: var(--color6)
+}
+
+#Commands_Functions {
+	display: normal;
+}
+#Error_Codes {
+	display: normal;
 }
 
 footer {
@@ -149,19 +530,16 @@ footer {
 	bottom: 0;
 	font-size: small;
 }
-
 #ip {
 	flex: 40%;
 	text-align: left;
 	padding-left: 10px;
 }
-
 #cc {
 	flex: 20%;
 	font-size: smaller;
+
 }
-
-
 #version {
 	flex: 40%;
 	text-align: right;
@@ -170,7 +548,7 @@ footer {
 
 @media screen and (max-width: 800px) {
 	.row {
-		flex-direction: row;
+		flex-direction: column;
 	}
 }
 )rawliteral";

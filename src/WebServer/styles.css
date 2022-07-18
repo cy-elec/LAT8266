@@ -1,7 +1,6 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--color1: #000000;
 		--color2: #0a0a0a;
 		--color3: #fffab575;
 		--color4: #a0a0a0;
@@ -13,7 +12,6 @@
 }
 @media (prefers-color-scheme: light) {
 	:root {
-		--color1: #f4f4f9;
 		--color2: #b8dbd9;
 		--color3: #586f7c;
 		--color4: #2f4550;
@@ -30,10 +28,10 @@
 }
 
 html, body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	min-width: 300px;
+    margin: 0px;
+    position: relative;
+    min-height: 100%;
+    height: auto;
 }
 
 header {
@@ -53,49 +51,95 @@ header {
 /*container for both sides*/
 .row {
 	display: flex;
-	flex-wrap: wrap;
-	text-align: center;
+	font-size: larger;
 	color: var(--color8);
 	height: 100%;
-	font-size: larger;
+	text-align: center;
 }
 
 /*left side*/
 .side {
-	flex: 25%;
+	flex: 1%;
 	background-color: var(--color6);
 	padding: 20px;
 }
 
 /*info side*/
 main {
-	flex: 75%;
+	flex: 80%;
 	background-color: var(--color7);
 	padding: 20px;
 }
 
+
+code {
+	padding: 2px;
+	margin: 2px;
+	border-style: solid;
+	border-radius: 5px;
+	background-color: var(--color2);
+	border-color: var(--color7);
+}
+
+
+.line {
+	border: 2px solid;
+	border-radius: 10px;
+	border-color: var(--color6);
+	background-color: var(--color6);
+}
+.underline {
+	border-bottom: 1px solid;
+	border-color: var(--color6);
+}
+
+.autoresize {
+	overflow-x:auto;
+}
+
+table{
+	border: 1px solid;
+	border-radius: 5px;
+	border-color: var(--color2);
+	border-collapse: collapse;
+}
+td, th {
+	border: 1px solid;
+	border-color: var(--color2);
+	text-align: left;
+	font-size: smaller;
+	padding: 5px 8px;
+}
+tr:nth-child(even) {
+	background-color: var(--color6)
+}
+
+#Commands_Functions {
+	display: normal;
+}
+#Error_Codes {
+	display: normal;
+}
+
 footer {
-	text-align: center;
 	background-color: var(--color2);
 	color: var(--color4);
 	display: flex;
 	position: sticky;
 	bottom: 0;
 	font-size: small;
+	text-align: center;
 }
-
 #ip {
 	flex: 40%;
 	text-align: left;
 	padding-left: 10px;
 }
-
 #cc {
 	flex: 20%;
 	font-size: smaller;
+
 }
-
-
 #version {
 	flex: 40%;
 	text-align: right;
@@ -104,6 +148,6 @@ footer {
 
 @media screen and (max-width: 800px) {
 	.row {
-		flex-direction: row;
+		flex-direction: column;
 	}
 }
