@@ -166,229 +166,233 @@ const char index_html[] PROGMEM = R"rawliteral(
 					<p class="line"></p>
 
 					<h2 class="underline">Functions and Global Variables</h2>
-					<table style="margin-left: auto;margin-right: auto;">
-					<tr>
-						<th> Function Name </th>
-						<th> Description </th>
-						<th> Return Value </th>
-					</tr>
-					<tr>
-						<td> LAT8266_HIDE_PASSWD(void)  </td>
-						<td> Disable password query. Cannot be disabled until reboot  </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> connect(WIFI_CONNDEFAULTTIME, SILENT_MODE) </td>
-						<td> Connect to a specified network.<br>WIFI_CONNDEFAULTTIME - timeout in ms<br>SILENT_MODE - reduce output on UART</td>
-						<td> bool </td>
-					</tr>
-					<tr>
-						<td> disconnect(WIFI_CONNDEFAULTTIME) </td>
-						<td> Disconnect from current Wi-Fi network.<br>WIFI_CONNDEFAULTTIME - timeout in ms </td>
-						<td> bool </td>
-					</tr>
-					<tr>
-						<td> scan(WIFI_SCANDEFAULTTIME) </td>
-						<td> Scan for other Wi-Fi Networks.<br>WIFI_SCANDEFAULTTIME - timeout in ms </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> printLastScan(void) </td>
-						<td> Print last scan to UART </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> reflect(String) </td>
-						<td> Invoke UART commands from within code by supplying a command chain.<br>Syntax is the same as the normal UART Command syntax </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> loop_cmd(void) </td>
-						<td> <b>HAS TO BE CALLED IN THE MAIN LOOP TO WORK PROPERLY</b> </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> printHeader(void) </td>
-						<td> Print request header to UART </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> printBody(void) </td>
-						<td> Print request body to UART </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> printHeaderInput(void) </td>
-						<td> Print response header to UART </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> printBodyInput(void) </td>
-						<td> Print response body to UART </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> setHeader(String) </td>
-						<td> Set request header</td>
-						<td> bool </td>
-					</tr>
-					<tr>
-						<td> setBody(String) </td>
-						<td> Set request body </td>
-						<td> bool </td>
-					</tr>
-					<tr>
-						<td> getHttpCode(void) </td>
-						<td> Get response code </td>
-						<td> int </td>
-					</tr>
-					<tr>
-						<td> httpUsingDefault(void) </td>
-						<td> Invoke HTTP Request using the default command </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> httpRequest(void) </td>
-						<td> Invoke a manual HTTP Request </td>
-						<td> void </td>
-					</tr>
-					<tr>
-						<td> VAR: glb_RequestTimeout </td>
-						<td> HTTP Request timeout</td>
-						<td> unsigned long </td>
-					</tr>
-					<tr>
-						<td> VAR: MAC </td>
-						<td> Holds device MAC Address. Modifying won't change anything </td>
-						<td> String </td>
-					</tr>
-					<tr>
-						<td> VAR: MDNSName </td>
-						<td> Holds MDNS Name. Modifying won't have an impact until reconnecting </td>
-						<td> String </td>
-					</tr>
-					</table>
+					<div class="autoresize">
+						<table style="margin-left: auto;margin-right: auto;">
+						<tr>
+							<th> Function Name </th>
+							<th> Description </th>
+							<th> Return Value </th>
+						</tr>
+						<tr>
+							<td> LAT8266_HIDE_PASSWD(void)  </td>
+							<td> Disable password query. Cannot be disabled until reboot  </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> connect(WIFI_CONNDEFAULTTIME, SILENT_MODE) </td>
+							<td> Connect to a specified network.<br>WIFI_CONNDEFAULTTIME - timeout in ms<br>SILENT_MODE - reduce output on UART</td>
+							<td> bool </td>
+						</tr>
+						<tr>
+							<td> disconnect(WIFI_CONNDEFAULTTIME) </td>
+							<td> Disconnect from current Wi-Fi network.<br>WIFI_CONNDEFAULTTIME - timeout in ms </td>
+							<td> bool </td>
+						</tr>
+						<tr>
+							<td> scan(WIFI_SCANDEFAULTTIME) </td>
+							<td> Scan for other Wi-Fi Networks.<br>WIFI_SCANDEFAULTTIME - timeout in ms </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> printLastScan(void) </td>
+							<td> Print last scan to UART </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> reflect(String) </td>
+							<td> Invoke UART commands from within code by supplying a command chain.<br>Syntax is the same as the normal UART Command syntax </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> loop_cmd(void) </td>
+							<td> <b>HAS TO BE CALLED IN THE MAIN LOOP TO WORK PROPERLY</b> </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> printHeader(void) </td>
+							<td> Print request header to UART </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> printBody(void) </td>
+							<td> Print request body to UART </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> printHeaderInput(void) </td>
+							<td> Print response header to UART </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> printBodyInput(void) </td>
+							<td> Print response body to UART </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> setHeader(String) </td>
+							<td> Set request header</td>
+							<td> bool </td>
+						</tr>
+						<tr>
+							<td> setBody(String) </td>
+							<td> Set request body </td>
+							<td> bool </td>
+						</tr>
+						<tr>
+							<td> getHttpCode(void) </td>
+							<td> Get response code </td>
+							<td> int </td>
+						</tr>
+						<tr>
+							<td> httpUsingDefault(void) </td>
+							<td> Invoke HTTP Request using the default command </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> httpRequest(void) </td>
+							<td> Invoke a manual HTTP Request </td>
+							<td> void </td>
+						</tr>
+						<tr>
+							<td> VAR: glb_RequestTimeout </td>
+							<td> HTTP Request timeout</td>
+							<td> unsigned long </td>
+						</tr>
+						<tr>
+							<td> VAR: MAC </td>
+							<td> Holds device MAC Address. Modifying won't change anything </td>
+							<td> String </td>
+						</tr>
+						<tr>
+							<td> VAR: MDNSName </td>
+							<td> Holds MDNS Name. Modifying won't have an impact until reconnecting </td>
+							<td> String </td>
+						</tr>
+						</table>
+					</div>
 
 				</div>
 				<div id="Error_Codes" style="text-align: left;">
 					<h2 class="underline"> Error Codes and Issues </h1>
-					<table style="margin-left: auto;margin-right: auto;">
-						<tr>
-							<td> SECTION </td>
-							<td> Error Code </td>
-							<td> Issue </td>
-						</tr>
-						<tr>
-							<td> * </td>
-							<td> ERROR xxx  </td>
-							<td> xxx ~ invoked command -> command not recognized </td>
-						</tr>
-						<tr>
-							<td> * </td>
-							<td> ERROR NOCMD </td>
-							<td> there is no command option available for the specified command - refer to [[Commands, Functions and Variables]] </td>
-						</tr>
-						<tr>
-							<td> * </td>
-							<td> ERROR VALUE </td>
-							<td> the provided value is not applicable to the command </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR INCOMPLETE </td>
-							<td> HTDEFAULT either HOST or PATH is missing </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR BODYFOUND </td>
-							<td> HTDEFAULT requesting query type and cannot clear body - HTTP bad request </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR MDNSQ </td>
-							<td> HTREQUEST cannot resolve mdns host </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR TIMEDOUT </td>
-							<td> HTREQUEST exceeded glb_RequestTimeout </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR CANCELLED </td>
-							<td> HTREQUEST connection closed </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR REQUEST </td>
-							<td> HTREQUEST could not connect to host </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR NOCONN </td>
-							<td> HTREQUEST not connected to the internet </td>
-						</tr>
-						<tr>
-							<td> HTTP </td>
-							<td> ERROR TIMEDOUT </td>
-							<td> HTHEADER or HTBODY timed out before reading end of header/body </td>
-						</tr>
-						<tr>
-							<td> MDNS </td>
-							<td> ERROR ALLOCQ </td>
-							<td> MDNSQNAME could not allocate memory </td>
-						</tr>
-						<tr>
-							<td> MDNS </td>
-							<td> ERROR MDNSBEGIN </td>
-							<td> MDNSQNAME could not start mdns service </td>
-						</tr>
-						<tr>
-							<td> MDNS </td>
-							<td> ERROR ALLOCM </td>
-							<td> MDNSSERVICE could not allocate memory </td>
-						</tr>
-						<tr>
-							<td> MDNS </td>
-							<td> ERROR MDNSQ </td>
-							<td> MDNSQNAME cannot resolve mdns name </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR TIMEDOUT </td>
-							<td> WIFICONN exceeded provided timeout </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR SSID </td>
-							<td> WIFICONN missing SSID </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR TIMEDOUT </td>
-							<td> WIFISCAN exceeded provided timeout </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR TIMEDOUT_NOCONN </td>
-							<td> WIFISCAN exceeded provided timeout or failed to reconnect </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR NOSCAN </td>
-							<td> WIFISCAN? invoked query before execution </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR SCANNING </td>
-							<td> WIFISCAN failed to scan </td>
-						</tr>
-						<tr>
-							<td> WIFI </td>
-							<td> ERROR ACCESS </td>
-							<td> WIFIPASSWD? read access has been disabled </td>
-						</tr>
-					</table>
+					<div class="autoresize">
+						<table style="margin-left: auto;margin-right: auto;">
+							<tr>
+								<td> SECTION </td>
+								<td> Error Code </td>
+								<td> Issue </td>
+							</tr>
+							<tr>
+								<td> * </td>
+								<td> ERROR xxx  </td>
+								<td> xxx ~ invoked command -> command not recognized </td>
+							</tr>
+							<tr>
+								<td> * </td>
+								<td> ERROR NOCMD </td>
+								<td> there is no command option available for the specified command - refer to [[Commands, Functions and Variables]] </td>
+							</tr>
+							<tr>
+								<td> * </td>
+								<td> ERROR VALUE </td>
+								<td> the provided value is not applicable to the command </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR INCOMPLETE </td>
+								<td> HTDEFAULT either HOST or PATH is missing </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR BODYFOUND </td>
+								<td> HTDEFAULT requesting query type and cannot clear body - HTTP bad request </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR MDNSQ </td>
+								<td> HTREQUEST cannot resolve mdns host </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR TIMEDOUT </td>
+								<td> HTREQUEST exceeded glb_RequestTimeout </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR CANCELLED </td>
+								<td> HTREQUEST connection closed </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR REQUEST </td>
+								<td> HTREQUEST could not connect to host </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR NOCONN </td>
+								<td> HTREQUEST not connected to the internet </td>
+							</tr>
+							<tr>
+								<td> HTTP </td>
+								<td> ERROR TIMEDOUT </td>
+								<td> HTHEADER or HTBODY timed out before reading end of header/body </td>
+							</tr>
+							<tr>
+								<td> MDNS </td>
+								<td> ERROR ALLOCQ </td>
+								<td> MDNSQNAME could not allocate memory </td>
+							</tr>
+							<tr>
+								<td> MDNS </td>
+								<td> ERROR MDNSBEGIN </td>
+								<td> MDNSQNAME could not start mdns service </td>
+							</tr>
+							<tr>
+								<td> MDNS </td>
+								<td> ERROR ALLOCM </td>
+								<td> MDNSSERVICE could not allocate memory </td>
+							</tr>
+							<tr>
+								<td> MDNS </td>
+								<td> ERROR MDNSQ </td>
+								<td> MDNSQNAME cannot resolve mdns name </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR TIMEDOUT </td>
+								<td> WIFICONN exceeded provided timeout </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR SSID </td>
+								<td> WIFICONN missing SSID </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR TIMEDOUT </td>
+								<td> WIFISCAN exceeded provided timeout </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR TIMEDOUT_NOCONN </td>
+								<td> WIFISCAN exceeded provided timeout or failed to reconnect </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR NOSCAN </td>
+								<td> WIFISCAN? invoked query before execution </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR SCANNING </td>
+								<td> WIFISCAN failed to scan </td>
+							</tr>
+							<tr>
+								<td> WIFI </td>
+								<td> ERROR ACCESS </td>
+								<td> WIFIPASSWD? read access has been disabled </td>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</main>
 		</div>
@@ -396,7 +400,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 		<!-- Footer -->
 		<footer align="center">
 			<p id="ip">%IP%</p>
-			<p id="cc"><a href="https://www.github.com/Elec42/"><img src="" id="logoimg" width="25px" height="25px" style="vertical-align:middle;" alt="www.github.com/Elec42/"></a> © 2022 Felix Kröhnert</p>
+			<p id="cc"><a href="https://www.github.com/Elec42/" target="_blank"><img src="" id="logoimg" width="25px" height="25px" style="vertical-align:middle;" alt="www.github.com/Elec42/"></a> © 2022 Felix Kröhnert</p>
 			<p id="version">%VERSION%</p>
 		</footer>
     </body>
@@ -404,7 +408,6 @@ const char index_html[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 const char styles_css[] PROGMEM = R"rawliteral(
-
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color2: #0a0a0a;
@@ -434,8 +437,10 @@ const char styles_css[] PROGMEM = R"rawliteral(
 }
 
 html, body {
-	margin: 0;
-	min-width: 400px;
+    margin: 0px;
+    position: relative;
+    min-height: 100%;
+    height: auto;
 }
 
 header {
@@ -497,6 +502,10 @@ code {
 	border-color: var(--color6);
 }
 
+.autoresize {
+	overflow-x:auto;
+}
+
 table{
 	border: 1px solid;
 	border-radius: 5px;
@@ -522,13 +531,13 @@ tr:nth-child(even) {
 }
 
 footer {
-	text-align: center;
 	background-color: var(--color2);
 	color: var(--color4);
 	display: flex;
 	position: sticky;
 	bottom: 0;
 	font-size: small;
+	text-align: center;
 }
 #ip {
 	flex: 40%;
