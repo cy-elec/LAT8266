@@ -1,6 +1,7 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
+		--color1: #122066;
 		--color2: #0a0a0a;
 		--color3: #fffab575;
 		--color4: #a0a0a0;
@@ -12,6 +13,7 @@
 }
 @media (prefers-color-scheme: light) {
 	:root {
+		--color1: #79f3d0;
 		--color2: #b8dbd9;
 		--color3: #586f7c;
 		--color4: #2f4550;
@@ -114,6 +116,15 @@ tr:nth-child(even) {
 	background-color: var(--color6)
 }
 
+a:visited {
+	color: var(--color2);
+}
+a:active {
+	color: var(--color5);
+}
+a:link {
+	color: var(--color1);
+}
 
 .content_button {
 	width: 100%;

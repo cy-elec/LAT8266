@@ -46,6 +46,12 @@ const char index_html[] PROGMEM = R"rawliteral(
 				<br>
 				<p class="line" style="border-color: var(--color7);"></p>
 				<h2 class="border">About</h2>
+				<div style="text-align: left;">
+					<p style="margin: 1px; padding: 0;"><b>Author: <a href="https://github.com/Elec42/" target="_blank">Felix Kröhnert</a></b></p>
+					<p style="margin: 1px; padding: 0;"><b><a href="https://github.com/Elec42/LAT8266" target="_blank">Project</a></b></p>
+					<p style="margin: 1px; padding: 0;"><b><a href="https://github.com/Elec42/LAT8266/wiki" target="_blank">Wiki</a></b></p>
+					<p style="margin: 1px; padding: 0;"><b><a href="https://github.com/Elec42/LAT8266/blob/main/LICENSE" target="_blank">License[MIT]</a></b></p>
+				</div>
 			</div>
 			
 			<!-- Info -->
@@ -416,6 +422,7 @@ const char styles_css[] PROGMEM = R"rawliteral(
 
 @media (prefers-color-scheme: dark) {
 	:root {
+		--color1: #122066;
 		--color2: #0a0a0a;
 		--color3: #fffab575;
 		--color4: #a0a0a0;
@@ -427,6 +434,7 @@ const char styles_css[] PROGMEM = R"rawliteral(
 }
 @media (prefers-color-scheme: light) {
 	:root {
+		--color1: #79f3d0;
 		--color2: #b8dbd9;
 		--color3: #586f7c;
 		--color4: #2f4550;
@@ -529,6 +537,15 @@ tr:nth-child(even) {
 	background-color: var(--color6)
 }
 
+a:visited {
+	color: var(--color2);
+}
+a:active {
+	color: var(--color5);
+}
+a:link {
+	color: var(--color1);
+}
 
 .content_button {
 	width: 100%;
