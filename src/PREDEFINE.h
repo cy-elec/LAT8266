@@ -1,5 +1,5 @@
 
-#define LAT_VERSION F("Version.1.4.4 - LAT by Felix Kröhnert")
+#define LAT_VERSION F("Version.1.5 - LAT by Felix Kröhnert")
 #define LAT_HELP F("Please refer to the documentation here https://github.com/Elec42/LAT8266/wiki")
 #define LAT_BAUD 115200
 #define WIFI_CONNDEFAULTTIME 20000
