@@ -23,6 +23,9 @@ void WebServerInit() {
 	server.on("/scripts.js", HTTP_GET, [](AsyncWebServerRequest *req) {
 		req->send(200, "application/javascript ", scripts_js);
 	});
+	server.on("/image", HTTP_GET, [](AsyncWebServerRequest *req) {
+		req->send_P(200, "text/plain ", image, processor);
+	});
 
 
 	server.begin();
