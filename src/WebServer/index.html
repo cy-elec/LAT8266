@@ -3,7 +3,7 @@
     <head>
 		<!-- REFRESH -->
         <!--<meta http-equiv="refresh" content="2">-->
-        <title>LAT8266</title>
+        <title>LAT8266 Local Manual</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="styles.css" rel="stylesheet">
@@ -16,26 +16,31 @@
 
 		<!-- Header -->
 		<header>
-			<h1 class="border">LAT8266</h1>
+			<h1 class="border">LAT8266 Local Manual</h1>
+			<img src="" class="logoimg" width="60px" height="60px" style="vertical-align:right;" alt="Cycle logo">
+			
 		</header>
 
 
 		<div class="row">	
 			<!-- Sidebar -->
 			<div class="side">
-				<h2 class="border">Sidebar</h2>
-
-				<div>
-					<p>Test Paragraph1</p>
+				<h2 class="border">Index</h2>
+				
+				<div id="index_div">
 				</div>
+
+				<br>
+				<p class="line" style="border-color: var(--color7);"></p>
+				<h2 class="border">About</h2>
 			</div>
 			
 			<!-- Info -->
 			<main>
-				<h2 class="border">Info Section</h2>
-
-				<div id="Commands_Functions" style="text-align: left;">
-					<h4></h4>
+				<h2 class="border">Info</h2>
+				
+				<div name="Commands" id="selected_content" class="content" style="text-align: left;">
+					<h2 class="underline"> Functions, Commands and Variables</h2>
 					<p class="line"></p>
 
 					All commands can be categorized into three different groups, which are labeled 1 to 3 respectively.<br>
@@ -259,8 +264,8 @@
 					</div>
 
 				</div>
-				<div id="Error_Codes" style="text-align: left;">
-					<h2 class="underline"> Error Codes and Issues </h1>
+				<div name="Errors" class="content" style="text-align: left;">
+					<h2 class="underline"> Error Codes and Issues </h2>
 					<div class="autoresize">
 						<table style="margin-left: auto;margin-right: auto;">
 							<tr>
@@ -387,7 +392,7 @@
 		<!-- Footer -->
 		<footer align="center">
 			<p id="ip">%IP%</p>
-			<p id="cc"><a href="https://www.github.com/Elec42/" target="_blank"><img src="" id="logoimg" width="25px" height="25px" style="vertical-align:middle;" alt="www.github.com/Elec42/"></a> © 2022 Felix Kröhnert</p>
+			<p id="cc"><a href="https://www.github.com/Elec42/" target="_blank"><img src="" class="logoimg" width="25px" height="25px" style="vertical-align:middle;" alt="www.github.com/Elec42/"></a> © 2022 Felix Kröhnert</p>
 			<p id="version">%VERSION%</p>
 		</footer>
     </body>

@@ -59,7 +59,7 @@ header {
 
 /*left side*/
 .side {
-	flex: 1%;
+	min-width: 200px;
 	background-color: var(--color6);
 	padding: 20px;
 }
@@ -114,12 +114,25 @@ tr:nth-child(even) {
 	background-color: var(--color6)
 }
 
-#Commands_Functions {
-	display: normal;
+
+.content_button {
+	width: 100%;
+	margin-bottom: 2px;
+	display: block;
+	padding: 2px;
+	border: 1px groove;
+	border-radius: 5px;
+	background-color: var(--color6);
+	color: var(--color4);
+	border-color: var(--color2);
 }
-#Error_Codes {
-	display: normal;
+
+.content_button:disabled {
+	background-color: var(--color7);
+	color: var(--color5); 
+	border-color: var(--color2);
 }
+
 
 footer {
 	background-color: var(--color2);
