@@ -18,10 +18,10 @@ void WebServerInit() {
 		req->send_P(200, "text/html", index_html, processor);
 	});
 	server.on("/styles.css", HTTP_GET, [](AsyncWebServerRequest *req) {
-		req->send(200, "text/css", styles_css);
+		req->send_P(200, "text/css", styles_css);
 	});
 	server.on("/scripts.js", HTTP_GET, [](AsyncWebServerRequest *req) {
-		req->send(200, "application/javascript ", scripts_js);
+		req->send_P(200, "application/javascript ", scripts_js);
 	});
 	server.on("/image", HTTP_GET, [](AsyncWebServerRequest *req) {
 		req->send_P(200, "text/plain ", image, processor);
@@ -29,6 +29,10 @@ void WebServerInit() {
 
 
 	server.begin();
+}
+
+void WebServerRun() {
+	server.cleanupClients();
 }
 
 String htmlFormat(String var) {

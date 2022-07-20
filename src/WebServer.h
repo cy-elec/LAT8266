@@ -16,6 +16,7 @@
 extern AsyncWebServer server;
 
 void WebServerInit();
+void WebServerRun();
 
 String processor(const String&);
 

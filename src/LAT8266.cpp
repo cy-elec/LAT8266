@@ -268,6 +268,7 @@ void LAT8266Class::loop_cmd() {
    * Wait for command
   */  
   MDNS.update();
+  WebServerRun();
   if(!Serial.available()) return;
   input[currentPt] = Serial.read();
   currentPt++;
