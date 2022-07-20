@@ -32,7 +32,7 @@ void WebServerInit() {
 }
 
 void WebServerRun() {
-	server.cleanupClients();
+	//nothing for now
 }
 
 String htmlFormat(String var) {
