@@ -9,8 +9,15 @@
 #include "WebServerSrc"
 
 AsyncWebServer server(82);
+bool WEB_INTERFACE=true;
 
-void WebServerInit() {
+void nof(AsyncWebServerRequest *req) {
+	req->send_P(404, "text/html", nof_html);
+}
+
+
+void WebServerInit(void * LAT, int (*queue)(void *, String), String (*result)(void *, int)) {
+
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *req) {
 		req->send(200, "text/html", root_html);
 	});
@@ -27,13 +34,51 @@ void WebServerInit() {
 		req->send_P(200, "text/plain ", image, processor);
 	});
 
+	server.on("/reflect", HTTP_ANY, [=](AsyncWebServerRequest *req) {
+		if(!WEB_INTERFACE) {
+			req->send(401, "text/html", "<h1>Interface disabled</h1>");
+			return;
+		}
+		if(req->method() == HTTP_GET) {
+			req->send(418, "text/plain", "I'm a teapot");
+		}
+		else if(req->method() == HTTP_POST) {
+			if(req->hasParam("reflect", true)) {
+				int id=queue(LAT, req->getParam("reflect", true)->value());
+				if(id==-1)
+					req->send(429, "text/plain", String(id));
+				else if(id==-2)
+					req->send(200, "text/plain", "OK\n");
+				else
+					req->send(202, "text/plain", String(id));
+			}
+			else
+				req->send(400, "text/plain", "Incorrect Argument");
+		}
+		else if(req->method()==HTTP_PUT) {
+			if(req->hasParam("id", true)) {
+				String r=result(LAT, req->getParam("id", true)->value().toInt());
+				req->send((r=="wait"?202:(r=="inc"?408:200)), "text/plain", r);
+			}
+			else
+				req->send(400, "text/plain", "Incorrect Argument");
+		}
+		else {
+			nof(req);
+		}
+	});
+	
+	server.onNotFound([](AsyncWebServerRequest *req) {
+		nof(req);
+	});
 
 	server.begin();
 }
 
-void WebServerRun() {
-	//nothing for now
+void WebServerRun(bool WEB_INTERFACE_) {
+	WEB_INTERFACE = WEB_INTERFACE_;
 }
+
 
 String htmlFormat(String var) {
 	var.replace("ö", "&ouml;");
@@ -53,8 +98,8 @@ String processor(const String& var){
   if(var == "VERSION") {
 	return String(htmlFormat(LAT_VERSION));
   }
-  if(var == "") {
-
+  if(var == "MAX_REFLECT") {
+	return String(MAX_REFLECT);
   }
   return String();
 }

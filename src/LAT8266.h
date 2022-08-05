@@ -11,7 +11,6 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
-#include "WebServer.h"
 #include "HTTPContent.h"
 #include "PREDEFINE.h"
 
@@ -24,19 +23,39 @@ typedef enum cmdmodes {
   MODE_CMD = 0, MODE_SET = 1, MODE_GET = 2
 } cmdmodes_t;
  
+int _queuer(void *, String);
+String _resultr(void *, int);
+
 class LAT8266Class {
   public:
     LAT8266Class();
 
     String WIFI_SSID = "";
-    void LAT8266_HIDE_PASSWD();    
+    void LAT8266_HIDE_PASSWD();
+	void LAT8266_WEB_INTERFACE(bool);
+	bool LAT8266_WEB_INTERFACE();
 
     bool connect(unsigned long = WIFI_CONNDEFAULTTIME, bool = false);
     bool disconnect(unsigned long = WIFI_CONNDEFAULTTIME);
     void scan(unsigned long = WIFI_SCANDEFAULTTIME);
     void printLastScan();
     
-    void reflect(String);
+	/*
+		undocumented and only for internal use
+		-> Reflect.Web linker
+	*/
+	int queue_reflect(String);
+	String queue_reflect(int);
+	void queue_reflect();
+
+	void addln();
+	void addln(int);
+	void addln(String);
+	/*
+		end undocumented
+	*/
+
+    void reflect(String, bool=false);
 
     void loop_cmd();
 
@@ -60,7 +79,7 @@ class LAT8266Class {
 
   private:
 
-    const static int maxInput = 1024;
+    const static int maxInput = MAX_REFLECT;
     char input[maxInput+2];
     int currentPt=0;
     cmdmodes_t currentMode;
@@ -75,7 +94,25 @@ class LAT8266Class {
       WRITE ONLY MODE CAN BE ENABLED BY CALLING LAT8266_HIDE_PASSWD() !!WARNING!! THIS CAN ONLY BE DONE ONCE BEFORE RESTARTING CHIP
     */
     bool LAT8266_HIDE_PASSWD_=false;
-    void cmdwifiPASSWD(char *pt);
+
+    /*
+		WebInterface
+	*/
+	bool LAT8266_WEB_INTERFACE_=true;
+	struct rqueue_st {
+		String arg;
+		unsigned long millis;
+		String result;
+	};
+    struct rqueue_st rqueue[REFLECT_QUEUE_SIZE];
+	int rqueued_ptr = 0;
+	int rqueue_ptr = 0;
+	int rqueue_time = 0;
+	String toSay = "";
+
+	bool noreturn(String);
+
+	void cmdwifiPASSWD(char *pt);
     void cmdwifiRSSI();
     void cmdwifiCONN(char *pt);
     void cmdwifiIP();
@@ -132,7 +169,7 @@ class LAT8266Class {
      * MDNS SECTION
      */
 
-    void processCmd();
+    void processCmd(bool=false);
     void processArg(char *);
     
     cmdmodes_t getNextMode(char *);
@@ -144,5 +181,6 @@ class LAT8266Class {
 };
 
 extern LAT8266Class LAT;
+#include "WebServer.h"
 
 #endif

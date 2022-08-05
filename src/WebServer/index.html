@@ -2,9 +2,9 @@
 <html>
     <head>
 		<!-- REFRESH -->
-        <!--<meta http-equiv="refresh" content="2">-->
         <title>LAT8266 Local Manual</title>
 		<meta charset="UTF-8">
+		<meta http-equiv="expires" content="0">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="styles.css" rel="stylesheet">
 		<!--conversion with this awesome tool: www.base64-image.de-->
@@ -44,8 +44,7 @@
 			<!-- Info -->
 			<main>
 				<h2 class="border">Info</h2>
-				
-				<div name="Commands" id="selected_content" class="content" style="text-align: left;">
+				<div name="Commands" id="selected_content" class="content">
 					<h2 class="underline"> Functions, Commands and Variables</h2>
 					<p class="line"></p>
 
@@ -175,6 +174,11 @@
 							<td> LAT8266_HIDE_PASSWD(void)  </td>
 							<td> Disable password query. Cannot be disabled until reboot  </td>
 							<td> void </td>
+						</tr>
+						<tr>
+							<td> LAT8266_WEB_INTERFACE(bool/void)</td>
+							<td> Disable/Enable Reflect.Web Interface / get current value</td>
+							<td> void/bool </td>
 						</tr>
 						<tr>
 							<td> connect(WIFI_CONNDEFAULTTIME, SILENT_MODE) </td>
@@ -391,6 +395,14 @@
 							</tr>
 						</table>
 					</div>
+				</div>
+
+				<div name="Reflect Inteface" class="content reflect_container" id="reflect_inteface_hidden">
+					<form method="dialog" action="" class="reflect" onsubmit="reflects()">
+						<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit">
+						<input type="text" id="reflect_wait" hidden>
+					</form>
+					<textarea id="reflect_result" readonly wrap="off"></textarea>
 				</div>
 			</main>
 		</div>

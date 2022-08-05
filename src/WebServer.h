@@ -14,10 +14,12 @@
 #include "PREDEFINE.h"
 
 extern AsyncWebServer server;
+extern bool WEB_INTERFACE;
 
-void WebServerInit();
-void WebServerRun();
+void WebServerInit(void *, int (*)(void *, String), String (*)(void *, int));
+void WebServerRun(bool);
 
+String htmlFormat(String var);
 String processor(const String&);
 
 #endif
