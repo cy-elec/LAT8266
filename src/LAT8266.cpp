@@ -119,7 +119,7 @@ void LAT8266Class::printLastScan() {
   }
   else {
     for(int i=0; i<n; i++) {
-      Serial.printf("%d: %s, Ch:%d (%ddBm) %s\n", i, WiFi.SSID(i).c_str(), WiFi.channel(i), WiFi.RSSI(i), WiFi.encryptionType(i) == ENC_TYPE_NONE ? "open" : "");
+      addln(String(String(i)+": "+WiFi.SSID(i)+", Ch:"+WiFi.channel(i)+" ("+WiFi.RSSI(i)+"dBm) "+(WiFi.encryptionType(i) == ENC_TYPE_NONE ? "open" : "")));
     }
   }
 }
@@ -186,11 +186,11 @@ void LAT8266Class::cmdwifiCONN(char *pt) {
 }
 
 void LAT8266Class::cmdwifiIP() {
-  addln(WiFi.localIP());
+  addln(WiFi.localIP().toString());
 }
 
 void LAT8266Class::cmdwifiCHNL() {
-  addln(WiFi.channel());
+  addln((uint8_t)WiFi.channel());
 }
 
 void LAT8266Class::cmdwifiMAC() {
@@ -260,12 +260,6 @@ void LAT8266Class::cmdwifiSCAN(char *pt) {
         printLastScan();
         break;
     default: scan(WIFI_SCANDEFAULTTIME); break;
-  }
-}
-
-void print0(String str) {
-  for(int i=0; i<str.length(); i++) {
-    Serial.print((int)str.charAt(i));Serial.print("("+ String(str.charAt(i))+")");
   }
 }
 
@@ -824,7 +818,7 @@ void LAT8266Class::cmdmdnsQueryName(char *pt) {
     addln("ERROR MDNSQ");
     return;
   }
-  Serial.printf("%s:%d\n", toIP(MDNS.IP(n)).c_str(), MDNS.port(n));
+  addln(toIP(MDNS.IP(n))+":"+MDNS.port(n));
 }
 
 void LAT8266Class::printHeader() {
