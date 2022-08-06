@@ -439,7 +439,7 @@ Commands may be chained with the separator<code>;</code>
 <!-- Footer -->
 <footer align="center">
 <p id="ip">%IP%</p>
-<p id="cc"><a href="https://www.github.com/Elec42/" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="logoimg" width="25px" height="25px" style="vertical-align:middle;" alt="www.github.com/Elec42/"></a> © 2022 Felix Kröhnert</p>
+<p id="cc"><a href="https://www.github.com/Elec42/" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="logoimg" width="25px" height="25px" style="vertical-align:middle;" alt="www.github.com/Elec42/"></a style="text-align: center;"> © 2022 Felix Kröhnert</p>
 <p id="version">%VERSION%</p>
 </footer>
 </body>

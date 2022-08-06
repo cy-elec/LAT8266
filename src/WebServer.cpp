@@ -96,7 +96,7 @@ String processor(const String& var){
     return String(WiFi.localIP().toString());
   }
   if(var == "VERSION") {
-	return String(htmlFormat(LAT_VERSION));
+	return htmlFormat(String(LAT_VERSION).substring(0, String(LAT_VERSION).indexOf(" -")));
   }
   if(var == "MAX_REFLECT") {
 	return String(MAX_REFLECT);
