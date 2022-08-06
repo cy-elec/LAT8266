@@ -44,7 +44,7 @@
 			<!-- Info -->
 			<main>
 				<h2 class="border">Info</h2>
-				<div name="Commands" id="selected_content" class="content">
+				<div name="Commands" class="content" id="selected_content">
 					<h2 class="underline"> Functions, Commands and Variables</h2>
 					<p class="line"></p>
 
@@ -397,12 +397,14 @@
 					</div>
 				</div>
 
-				<div name="Reflect Inteface" class="content reflect_container" id="reflect_inteface_hidden">
-					<form method="dialog" action="" class="reflect" onsubmit="reflects()">
-						<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit">
-						<input type="text" id="reflect_wait" hidden>
-					</form>
-					<textarea id="reflect_result" readonly wrap="off"></textarea>
+				<div name="Reflect Inteface" class="content reflect_container"> 
+					<div id="reflect_inteface_hidden">
+						<form method="dialog" action="" class="reflect" onsubmit="reflects()">
+							<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit" hidden><input type="checkbox" id="reflect_check" hidden checked><label for="reflect_submit" class="loader"><div class="checkmark"></div></label>
+							<input type="text" id="reflect_wait" hidden>
+						</form>
+						<textarea id="reflect_result" readonly wrap="off"></textarea>
+					</div>
 				</div>
 			</main>
 		</div>

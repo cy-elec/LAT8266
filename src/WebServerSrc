@@ -71,7 +71,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 <!-- Info -->
 <main>
 <h2 class="border">Info</h2>
-<div name="Commands" id="selected_content" class="content">
+<div name="Commands" class="content" id="selected_content">
 <h2 class="underline"> Functions, Commands and Variables</h2>
 <p class="line"></p>
 
@@ -424,12 +424,14 @@ Commands may be chained with the separator<code>;</code>
 </div>
 </div>
 
-<div name="Reflect Inteface" class="content reflect_container" id="reflect_inteface_hidden">
+<div name="Reflect Inteface" class="content reflect_container"> 
+<div id="reflect_inteface_hidden">
 <form method="dialog" action="" class="reflect" onsubmit="reflects()">
-<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit">
+<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit" hidden><input type="checkbox" id="reflect_check" hidden checked><label for="reflect_submit" class="loader"><div class="checkmark"></div></label>
 <input type="text" id="reflect_wait" hidden>
 </form>
 <textarea id="reflect_result" readonly wrap="off"></textarea>
+</div>
 </div>
 </main>
 </div>
@@ -639,6 +641,8 @@ width: 100%;
 
 .reflect {
 display: flex;
+position: relative;
+z-index: 0;
 }
 
 .reflect input {
@@ -653,7 +657,7 @@ border-color: var(--color5);
 }
 
 #reflect_input {
-flex: 80%;
+flex: auto;
 }
 
 #reflect_result {
@@ -671,6 +675,92 @@ resize: none;
 overflow: scroll;
 scrollbar-color: var(--color9) var(--color7);
 scrollbar-width: thin;
+}
+
+.loader {
+top: 3px;
+left: 1px;
+padding: 0;
+width: 16px;
+height: 16px;
+border: 3px solid rebeccapurple;
+border-radius: 50%;
+position: relative;
+}
+
+.loader::after {
+animation: pulse 1500ms cubic-bezier(0.83, 0.75, 0.5, 0.9) infinite;
+}
+
+@keyframes pulse {
+0% {
+opacity: 0;
+}
+50% {
+transform: scale(1.2);
+opacity: 0.8;
+}
+}
+
+.loader::after {
+content: '';
+position: absolute;
+width: 100%;
+height: 100%;
+top: -3px;
+left: -3px;
+border: 3px solid blueviolet;
+border-radius: 50%;
+z-index: -1;
+}
+
+.checkmark::after {
+content: '';
+position: absolute;
+top: -1px;
+left: 6px;
+height: 6px;
+width: 3px;
+border-right: 3px solid green;
+border-bottom: 3px solid green;
+border-radius: 2px;
+transform: rotate(45deg);
+transform-origin: left top;
+animation: checker 800ms ease;
+}
+
+@keyframes checker {
+0% {
+height: 0;
+width: 0;
+opacity: 1;
+}	
+20% {
+height: 0;
+width: 3px;
+opacity: 1;
+}
+60% {
+height: 6px;
+width: 3px;
+opacity: 1;
+}
+100% {
+height: 6px;
+width: 3px;
+opacity: 1;
+}
+}
+
+#reflect_check:checked ~ .loader {
+border: 3px solid green;
+transition: border-color 800ms ease;
+}
+#reflect_check:checked ~ .loader::after {
+animation: none;
+}
+#reflect_check:not(:checked) ~ * > .checkmark::after {
+display: none;
 }
 
 @media screen and (max-width: 800px) {
@@ -753,8 +843,8 @@ else if(xmlHttp.status == 200) {
 let response = document.getElementById("reflect_result");
 response.value=response.value + "<<" + xmlHttp.response;
 response.scrollTop = response.scrollHeight;
-let wait = document.getElementById("reflect_wait");
-wait.removeAttribute("required");
+document.getElementById("reflect_wait").removeAttribute("required");
+document.getElementById("reflect_check").setAttribute("checked", "");
 }
 else {
 setr="Couldn't retrieve response";
@@ -765,8 +855,8 @@ setr="Interface is currently disabled";
 let response = document.getElementById("reflect_result");
 response.value=response.value + "<<" + setr + "\n";
 response.scrollTop = response.scrollHeight;
-let wait = document.getElementById("reflect_wait");
-wait.removeAttribute("required");
+document.getElementById("reflect_wait").removeAttribute("required");
+document.getElementById("reflect_check").setAttribute("checked", "");
 }
 }
 }
@@ -778,8 +868,8 @@ let response = document.getElementById("reflect_result");
 response.value=response.value + ">>" + input.value +"\n";
 response.scrollTop = response.scrollHeight;
 input.value="";
-let wait = document.getElementById("reflect_wait");
-wait.setAttribute("required", "");
+document.getElementById("reflect_wait").setAttribute("required", "");
+document.getElementById("reflect_check").removeAttribute("checked");
 }
 
 function receive(input, id) {
@@ -791,15 +881,15 @@ if(xmlHttp.status==200) {
 let response = document.getElementById("reflect_result");
 response.value=response.value + "<<" + xmlHttp.response;
 response.scrollTop = response.scrollHeight;
-let wait = document.getElementById("reflect_wait");
-wait.removeAttribute("required");
+document.getElementById("reflect_wait").removeAttribute("required");
+document.getElementById("reflect_check").setAttribute("checked", "");
 }
 else if(xmlHttp.status==408) {
 let response = document.getElementById("reflect_result");
 response.value=response.value + "<< ERROR: id invalid\n";
 response.scrollTop = response.scrollHeight;
-let wait = document.getElementById("reflect_wait");
-wait.removeAttribute("required");
+document.getElementById("reflect_wait").removeAttribute("required");
+document.getElementById("reflect_check").setAttribute("checked", "");
 }
 else {
 setTimeout(function(){

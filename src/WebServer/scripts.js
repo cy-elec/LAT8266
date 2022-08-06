@@ -70,8 +70,8 @@ function reflects() {
 				let response = document.getElementById("reflect_result");
 				response.value=response.value + "<<" + xmlHttp.response;
 				response.scrollTop = response.scrollHeight;
-				let wait = document.getElementById("reflect_wait");
-				wait.removeAttribute("required");
+				document.getElementById("reflect_wait").removeAttribute("required");
+				document.getElementById("reflect_check").setAttribute("checked", "");
 			}
 			else {
 				setr="Couldn't retrieve response";
@@ -82,8 +82,8 @@ function reflects() {
 				let response = document.getElementById("reflect_result");
 				response.value=response.value + "<<" + setr + "\n";
 				response.scrollTop = response.scrollHeight;
-				let wait = document.getElementById("reflect_wait");
-				wait.removeAttribute("required");
+				document.getElementById("reflect_wait").removeAttribute("required");
+				document.getElementById("reflect_check").setAttribute("checked", "");
 			}
 		}
     }
@@ -95,8 +95,8 @@ function reflects() {
 	response.value=response.value + ">>" + input.value +"\n";
 	response.scrollTop = response.scrollHeight;
 	input.value="";
-	let wait = document.getElementById("reflect_wait");
-	wait.setAttribute("required", "");
+	document.getElementById("reflect_wait").setAttribute("required", "");
+	document.getElementById("reflect_check").removeAttribute("checked");
 }
 
 function receive(input, id) {
@@ -108,15 +108,15 @@ function receive(input, id) {
 				let response = document.getElementById("reflect_result");
 				response.value=response.value + "<<" + xmlHttp.response;
 				response.scrollTop = response.scrollHeight;
-				let wait = document.getElementById("reflect_wait");
-				wait.removeAttribute("required");
+				document.getElementById("reflect_wait").removeAttribute("required");
+				document.getElementById("reflect_check").setAttribute("checked", "");
 			}
 			else if(xmlHttp.status==408) {
 				let response = document.getElementById("reflect_result");
 				response.value=response.value + "<< ERROR: id invalid\n";
 				response.scrollTop = response.scrollHeight;
-				let wait = document.getElementById("reflect_wait");
-				wait.removeAttribute("required");
+				document.getElementById("reflect_wait").removeAttribute("required");
+				document.getElementById("reflect_check").setAttribute("checked", "");
 			}
 			else {
 				setTimeout(function(){
