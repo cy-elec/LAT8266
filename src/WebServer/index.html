@@ -398,13 +398,11 @@
 				</div>
 
 				<div name="Reflect Inteface" class="content reflect_container"> 
-					<div id="reflect_inteface_hidden">
-						<form method="dialog" action="" class="reflect" onsubmit="reflects()">
-							<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit" hidden><input type="checkbox" id="reflect_check" hidden checked><label for="reflect_submit" class="loader"><div class="checkmark"></div></label>
-							<input type="text" id="reflect_wait" hidden>
-						</form>
-						<textarea id="reflect_result" readonly wrap="off"></textarea>
-					</div>
+					<form method="dialog" action="" class="reflect" onsubmit="reflects()">
+						<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit" hidden><input type="checkbox" id="reflect_check" hidden checked><label for="reflect_submit" class="loader"><div class="checkmark" id="reflect_confirmation"></div><div class="crossd" id="reflect_crossd" hidden></div></label>
+						<input type="text" id="reflect_wait" hidden>
+					</form>
+					<textarea id="reflect_result" readonly wrap="off"></textarea>
 				</div>
 			</main>
 		</div>

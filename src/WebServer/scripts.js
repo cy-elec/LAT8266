@@ -67,23 +67,21 @@ function reflects() {
 				receive(input, xmlHttp.response);
 			}
 			else if(xmlHttp.status == 200) {
+				setSuccess();
 				let response = document.getElementById("reflect_result");
-				response.value=response.value + "<<" + xmlHttp.response;
-				response.scrollTop = response.scrollHeight;
-				document.getElementById("reflect_wait").removeAttribute("required");
-				document.getElementById("reflect_check").setAttribute("checked", "");
+				response.value=response.value + "<< " + xmlHttp.response;
+				finishResponse();
 			}
 			else {
+				setError();
 				setr="Couldn't retrieve response";
 				if(xmlHttp.response=="-1")
-					setr="Server is too busy right now. Please try again later";
+				setr="Server is too busy right now. Please try again later";
 				if(xmlHttp.status==401)
-					setr="Interface is currently disabled";
+				setr="Interface is currently disabled";
 				let response = document.getElementById("reflect_result");
-				response.value=response.value + "<<" + setr + "\n";
-				response.scrollTop = response.scrollHeight;
-				document.getElementById("reflect_wait").removeAttribute("required");
-				document.getElementById("reflect_check").setAttribute("checked", "");
+				response.value=response.value + "<< " + setr + "\n";
+				finishResponse();
 			}
 		}
     }
@@ -92,11 +90,11 @@ function reflects() {
     xmlHttp.open("POST", "reflect", true); // true for asynchronous 
     xmlHttp.send(formData);
 	let response = document.getElementById("reflect_result");
-	response.value=response.value + ">>" + input.value +"\n";
-	response.scrollTop = response.scrollHeight;
+	response.value=response.value + ">> " + input.value +"\n";
 	input.value="";
-	document.getElementById("reflect_wait").setAttribute("required", "");
-	document.getElementById("reflect_check").removeAttribute("checked");
+	document.getElementById("reflect_wait").required=true;
+	document.getElementById("reflect_check").checked=false;
+	document.getElementById("reflect_crossd").hidden=true;
 }
 
 function receive(input, id) {
@@ -105,18 +103,30 @@ function receive(input, id) {
 	xmlHttp.onreadystatechange = function() {
 		if(xmlHttp.readyState==4) {
 			if(xmlHttp.status==200) {
+				let resp = "";
+				if(xmlHttp.response.startsWith("<<ERROR>>")) {
+					//change animation
+					setError();
+					resp = xmlHttp.response.substr(10);
+				}
+				else if(xmlHttp.response.startsWith("<<SUCCESS>>")) {
+					//change animation
+					setSuccess();
+					resp = xmlHttp.response.substr(12);
+				}
+				else {
+					setError();
+					resp = "ERROR: received response is invalid\n";
+				}
 				let response = document.getElementById("reflect_result");
-				response.value=response.value + "<<" + xmlHttp.response;
-				response.scrollTop = response.scrollHeight;
-				document.getElementById("reflect_wait").removeAttribute("required");
-				document.getElementById("reflect_check").setAttribute("checked", "");
+				response.value=response.value + "<< " + resp;
+				finishResponse();
 			}
 			else if(xmlHttp.status==408) {
+				setError();
 				let response = document.getElementById("reflect_result");
-				response.value=response.value + "<< ERROR: id invalid\n";
-				response.scrollTop = response.scrollHeight;
-				document.getElementById("reflect_wait").removeAttribute("required");
-				document.getElementById("reflect_check").setAttribute("checked", "");
+				response.value=response.value + "<< ERROR: internal id invalid\n";
+				finishResponse();
 			}
 			else {
 				setTimeout(function(){
@@ -129,4 +139,20 @@ function receive(input, id) {
 	formData.append("id", id);
 	xmlHttp.open("PUT", "reflect", true);
 	xmlHttp.send(formData);
+}
+
+function setError() {
+	document.getElementById("reflect_confirmation").classList="cross";
+	document.getElementById("reflect_crossd").hidden=false;
+}
+function setSuccess() {
+	document.getElementById("reflect_confirmation").classList="checkmark";
+	document.getElementById("reflect_crossd").hidden=true;
+}
+
+function finishResponse() {
+	let response = document.getElementById("reflect_result");
+	response.scrollTop = response.scrollHeight;
+	document.getElementById("reflect_wait").required=false;
+	document.getElementById("reflect_check").checked=true;
 }

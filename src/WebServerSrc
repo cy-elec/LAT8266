@@ -427,7 +427,7 @@ Commands may be chained with the separator<code>;</code>
 <div name="Reflect Inteface" class="content reflect_container"> 
 <div id="reflect_inteface_hidden">
 <form method="dialog" action="" class="reflect" onsubmit="reflects()">
-<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit" hidden><input type="checkbox" id="reflect_check" hidden checked><label for="reflect_submit" class="loader"><div class="checkmark"></div></label>
+<input type="text" name="reflect" placeholder="Enter command [%MAX_REFLECT%]" required maxlength="%MAX_REFLECT%" id="reflect_input"><input type="submit" id="reflect_submit" hidden><input type="checkbox" id="reflect_check" hidden checked><label for="reflect_submit" class="loader"><div class="checkmark" id="reflect_confirmation"></div><div class="crossd" id="reflect_crossd" hidden></div></label>
 <input type="text" id="reflect_wait" hidden>
 </form>
 <textarea id="reflect_result" readonly wrap="off"></textarea>
@@ -717,14 +717,13 @@ z-index: -1;
 .checkmark::after {
 content: '';
 position: absolute;
-top: -1px;
-left: 6px;
+top: 50%;
 height: 6px;
 width: 3px;
 border-right: 3px solid green;
-border-bottom: 3px solid green;
+border-top: 3px solid green;
 border-radius: 2px;
-transform: rotate(45deg);
+transform: scaleX(-1) rotate(135deg);
 transform-origin: left top;
 animation: checker 800ms ease;
 }
@@ -752,6 +751,42 @@ opacity: 1;
 }
 }
 
+.cross::after {
+content: '';
+position: absolute;
+top: 1px;
+left: 50%;
+height: 100%;
+border-right: 2px solid red;
+transform: rotate(45deg) translateX(-1px);
+animation: crosser 800ms ease;
+}
+.crossd::after {
+content: '';
+position: absolute;
+top: 1px;
+left: 50%;
+height: 100%;
+border-right: 2px solid red;
+transform: rotate(-45deg) translateY(-1px);
+animation: crosser 800ms ease;
+}
+
+@keyframes crosser {
+0% {
+height: 0%;
+opacity: 1;
+}	
+80% {
+height: 100%;
+opacity: 1;
+}
+100% {
+height: 100%;
+opacity: 1;
+}
+}
+
 #reflect_check:checked ~ .loader {
 border: 3px solid green;
 transition: border-color 800ms ease;
@@ -760,6 +795,9 @@ transition: border-color 800ms ease;
 animation: none;
 }
 #reflect_check:not(:checked) ~ * > .checkmark::after {
+display: none;
+}
+#reflect_check:not(:checked) ~ * > .cross::after {
 display: none;
 }
 
@@ -840,23 +878,21 @@ if(xmlHttp.status == 202) {
 receive(input, xmlHttp.response);
 }
 else if(xmlHttp.status == 200) {
+setSuccess();
 let response = document.getElementById("reflect_result");
-response.value=response.value + "<<" + xmlHttp.response;
-response.scrollTop = response.scrollHeight;
-document.getElementById("reflect_wait").removeAttribute("required");
-document.getElementById("reflect_check").setAttribute("checked", "");
+response.value=response.value + "<< " + xmlHttp.response;
+finishResponse();
 }
 else {
+setError();
 setr="Couldn't retrieve response";
 if(xmlHttp.response=="-1")
 setr="Server is too busy right now. Please try again later";
 if(xmlHttp.status==401)
 setr="Interface is currently disabled";
 let response = document.getElementById("reflect_result");
-response.value=response.value + "<<" + setr + "\n";
-response.scrollTop = response.scrollHeight;
-document.getElementById("reflect_wait").removeAttribute("required");
-document.getElementById("reflect_check").setAttribute("checked", "");
+response.value=response.value + "<< " + setr + "\n";
+finishResponse();
 }
 }
 }
@@ -865,11 +901,11 @@ formData.append("reflect", input.value);
 xmlHttp.open("POST", "reflect", true); // true for asynchronous 
 xmlHttp.send(formData);
 let response = document.getElementById("reflect_result");
-response.value=response.value + ">>" + input.value +"\n";
-response.scrollTop = response.scrollHeight;
+response.value=response.value + ">> " + input.value +"\n";
 input.value="";
-document.getElementById("reflect_wait").setAttribute("required", "");
-document.getElementById("reflect_check").removeAttribute("checked");
+document.getElementById("reflect_wait").required=true;
+document.getElementById("reflect_check").checked=false;
+document.getElementById("reflect_crossd").hidden=true;
 }
 
 function receive(input, id) {
@@ -878,18 +914,30 @@ var xmlHttp = new XMLHttpRequest();
 xmlHttp.onreadystatechange = function() {
 if(xmlHttp.readyState==4) {
 if(xmlHttp.status==200) {
+let resp = "";
+if(xmlHttp.response.startsWith("<<ERROR>>")) {
+//change animation
+setError();
+resp = xmlHttp.response.substr(10);
+}
+else if(xmlHttp.response.startsWith("<<SUCCESS>>")) {
+//change animation
+setSuccess();
+resp = xmlHttp.response.substr(12);
+}
+else {
+setError();
+resp = "ERROR: received response is invalid\n";
+}
 let response = document.getElementById("reflect_result");
-response.value=response.value + "<<" + xmlHttp.response;
-response.scrollTop = response.scrollHeight;
-document.getElementById("reflect_wait").removeAttribute("required");
-document.getElementById("reflect_check").setAttribute("checked", "");
+response.value=response.value + "<< " + resp;
+finishResponse();
 }
 else if(xmlHttp.status==408) {
+setError();
 let response = document.getElementById("reflect_result");
-response.value=response.value + "<< ERROR: id invalid\n";
-response.scrollTop = response.scrollHeight;
-document.getElementById("reflect_wait").removeAttribute("required");
-document.getElementById("reflect_check").setAttribute("checked", "");
+response.value=response.value + "<< ERROR: internal id invalid\n";
+finishResponse();
 }
 else {
 setTimeout(function(){
@@ -902,6 +950,22 @@ let formData = new FormData();
 formData.append("id", id);
 xmlHttp.open("PUT", "reflect", true);
 xmlHttp.send(formData);
+}
+
+function setError() {
+document.getElementById("reflect_confirmation").classList="cross";
+document.getElementById("reflect_crossd").hidden=false;
+}
+function setSuccess() {
+document.getElementById("reflect_confirmation").classList="checkmark";
+document.getElementById("reflect_crossd").hidden=true;
+}
+
+function finishResponse() {
+let response = document.getElementById("reflect_result");
+response.scrollTop = response.scrollHeight;
+document.getElementById("reflect_wait").required=false;
+document.getElementById("reflect_check").checked=true;
 }
 )rawliteral";
 
