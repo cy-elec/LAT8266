@@ -9,7 +9,6 @@
 		--color6: #212121;
 		--color7: #1b1b1b;
 		--color8: #bfbfbf;
-		--color9: rebeccapurple;
 	}
 }
 @media (prefers-color-scheme: light) {
@@ -22,7 +21,6 @@
 		--color6: #97b9b7;
 		--color7: #9ed8d5;
 		--color8: #11342c;
-		--color9: rebeccapurple;
 	}
 }
 
@@ -224,7 +222,7 @@ footer {
 	
 	resize: none;
 	overflow: scroll;
-	scrollbar-color: var(--color9) var(--color7);
+	scrollbar-color: rebeccapurple var(--color7);
 	scrollbar-width: thin;
 }
 
