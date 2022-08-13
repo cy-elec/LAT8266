@@ -12,6 +12,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include "HTTPContent.h"
+#include "WebServer.h"
 #include "PREDEFINE.h"
 
 /*
@@ -26,21 +27,24 @@ typedef enum cmdmodes
 	MODE_GET = 2
 } cmdmodes_t;
 
-int _queuer(void *, String);
-String _resultr(void *, int);
-
 class LAT8266Class
 {
 public:
 	LAT8266Class();
 
+	String WiFiStatusStr(void);
+
 	String WIFI_SSID = "";
-	void LAT8266_HIDE_PASSWD();
+	String AP_SSID = "";
+	void LAT8266_HIDE_WIFI_PASSWD();
+	void LAT8266_HIDE_AP_PASSWD();
 	void LAT8266_WEB_INTERFACE(bool);
 	bool LAT8266_WEB_INTERFACE();
 
-	bool connect(unsigned long = WIFI_CONNDEFAULTTIME, bool = false);
+	bool connect(unsigned long = WIFI_CONNDEFAULTTIME, bool = false, bool = false, bool = false, int = 4);
+	bool connectAP(bool = false, int = 4, bool = false);
 	bool disconnect(unsigned long = WIFI_CONNDEFAULTTIME);
+	bool disconnectAP(void);
 	void scan(unsigned long = WIFI_SCANDEFAULTTIME);
 	void printLastScan();
 
@@ -87,16 +91,22 @@ private:
 	int currentPt = 0;
 	cmdmodes_t currentMode;
 
+	LAT8266WebServer WebServer;
 	WiFiClient client;
 
 	String WIFI_PASSWD = "";
+	String AP_PASSWD = "";
+	bool AP_HIDDEN = false;
+	bool AP_CONN = false;
 
 	// command interaction
 	void cmdwifiSSID(char *pt);
+	void cmdapSSID(char *pt);
 	/*
-	  WRITE ONLY MODE CAN BE ENABLED BY CALLING LAT8266_HIDE_PASSWD() !!WARNING!! THIS CAN ONLY BE DONE ONCE BEFORE RESTARTING CHIP
+	  WRITE ONLY MODE CAN BE ENABLED BY CALLING LAT8266_HIDE_WIFI_PASSWD() and/or CALLING LAT8266_HIDE_AP_PASSWD() !!WARNING!! THIS CAN ONLY BE DONE ONCE BEFORE RESTARTING CHIP
 	*/
-	bool LAT8266_HIDE_PASSWD_ = false;
+	bool LAT8266_HIDE_WIFI_PASSWD_ = false;
+	bool LAT8266_HIDE_AP_PASSWD_ = false;
 
 	/*
 		WebInterface
@@ -127,6 +137,13 @@ private:
 	void cmdwifiAUTO(char *pt);
 	void cmdwifiAUTOSTART(char *pt);
 	void cmdwifiSCAN(char *pt);
+
+	void cmdapPASSWD(char *pt);
+	void cmdapCONN(char *pt);
+	void cmdapIP();
+	void cmdapStationNum();
+	void cmdapMAC();
+	void cmdapHide(char *pt);
 
 	/*
 	 * HTTP SECTION
@@ -185,6 +202,5 @@ private:
 };
 
 extern LAT8266Class LAT;
-#include "WebServer.h"
 
 #endif

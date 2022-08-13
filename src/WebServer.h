@@ -13,13 +13,17 @@
 #include <ESPAsyncWebServer.h>
 #include "PREDEFINE.h"
 
-extern AsyncWebServer server;
-extern bool WEB_INTERFACE;
+class LAT8266WebServer {
 
-void WebServerInit(void *, int (*)(void *, String), String (*)(void *, int));
-void WebServerRun(bool);
+	private: 
+		AsyncWebServer server;
+		bool WEB_INTERFACE = true;
 
-String htmlFormat(String var);
-String processor(const String&);
+	public: 
+
+		LAT8266WebServer();
+		void init(void *, int (*)(void *, String), String (*)(void *, int));
+		void run(bool);
+};
 
 #endif

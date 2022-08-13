@@ -7,6 +7,7 @@ Syntax Coloring Map For LAT8266
 #######################################
 
 LAT8266	KEYWORD1
+LAT8266WebServer	KEYWORD1
 HTTPContent	KEYWORD1
 
 #######################################
@@ -15,6 +16,7 @@ HTTPContent	KEYWORD1
 
 LAT	KEYWORD1
 WIFI_SSID	KEYWORD1
+AP_SSID	KEYWORD1
 MAC	KEYWORD1
 MDNSName	KEYWORD1
 
@@ -23,11 +25,14 @@ MDNSName	KEYWORD1
 #######################################
 
 #LAT8266Class
+WiFiStatusStr	KEYWORD2
 reflect	KEYWORD2
 queue_reflect	KEYWORD2
 addln	KEYWORD2
 connect	KEYWORD2
 disconnect	KEYWORD2
+connectAP	KEYWORD2
+disconnectAP	KEYWORD2
 scan	KEYWORD2
 printLastScan	KEYWORD2
 loop_cmd	KEYWORD2
@@ -40,7 +45,8 @@ printBodyInput	KEYWORD2
 getHttpCode	KEYWORD2
 httpUsingDefault	KEYWORD2
 httpRequest	KEYWORD2
-LAT8266_HIDE_PASSWD	KEYWORD2
+LAT8266_HIDE_WIFI_PASSWD	KEYWORD2
+LAT8266_HIDE_AP_PASSWD	KEYWORD2
 LAT8266_WEB_INTERFACE	KEYWORD2
 
 #HTTPContent

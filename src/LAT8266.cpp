@@ -23,15 +23,43 @@ LAT8266Class::LAT8266Class()
 	MAC = WiFi.macAddress();
 	MAC.replace(":", "");
 	MDNSName = MDNS_DEFAULTNAMEPRE + MAC;
-	WebServerInit(this, &_queuer, &_resultr);
+	WebServer.init(this, &_queuer, &_resultr);
 }
 
-bool LAT8266Class::connect(unsigned long timeout, bool silent)
+String LAT8266Class::WiFiStatusStr(void)
+{
+	switch (WiFi.status())
+	{
+	case WL_CONNECTED:
+		return "STATION_GOT_IP";
+	case WL_NO_SSID_AVAIL:
+		return "STATION_NO_AP_FOUND";
+	case WL_CONNECT_FAILED:
+		return "STATION_CONNECT_FAIL";
+	case WL_WRONG_PASSWORD:
+		return "STATION_WRONG_PASSWORD";
+	case WL_IDLE_STATUS:
+		return "STATION_IDLE";
+	default:
+		return "STATION_DISCONNECTED";
+	}
+}
+
+bool LAT8266Class::connect(unsigned long timeout, bool silent, bool ap, bool hidden, int stations)
 {
 
 	unsigned long otim = timeout;
 	timeout += millis();
-	WiFi.mode(WIFI_STA);
+	WiFi.mode(WIFI_AP_STA);
+
+	if (ap)
+	{
+		if (!connectAP(hidden, stations, true))
+		{
+			addln("ERROR CAP");
+			return false;
+		}
+	}
 
 	if (!disconnect(otim))
 	{
@@ -85,6 +113,32 @@ bool LAT8266Class::connect(unsigned long timeout, bool silent)
 	return true;
 }
 
+bool LAT8266Class::connectAP(bool hidden, int stations, bool silent)
+{
+	if (AP_SSID == "")
+	{
+		rqueue_errored = true;
+		if (!silent)
+			addln("ERROR SSID");
+		AP_CONN = false;
+		return false;
+	}
+	bool r = WiFi.softAP(AP_SSID, AP_PASSWD, 1, hidden ? 1 : 0, stations > 8 ? 8 : stations < 1 ? 1 : stations);
+	AP_CONN = r;
+	if (silent)
+		return r;
+	if (r)
+	{
+		addln("OK");
+	}
+	else
+	{
+		rqueue_errored = true;
+		addln("ERROR CAP");
+	}
+	return r;
+}
+
 bool LAT8266Class::disconnect(unsigned long timeout)
 {
 	timeout += millis();
@@ -95,6 +149,13 @@ bool LAT8266Class::disconnect(unsigned long timeout)
 	}
 	if (millis() >= timeout)
 		return false;
+	return true;
+}
+
+bool LAT8266Class::disconnectAP(void)
+{
+	if(AP_CONN)
+		return !(AP_CONN = !WiFi.softAPdisconnect());
 	return true;
 }
 
@@ -176,10 +237,33 @@ void LAT8266Class::cmdwifiSSID(char *pt)
 		break;
 	}
 }
-
-void LAT8266Class::LAT8266_HIDE_PASSWD()
+void LAT8266Class::cmdapSSID(char *pt)
 {
-	LAT8266_HIDE_PASSWD_ = true;
+	switch (currentMode)
+	{
+	case MODE_SET:
+		while (*(pt++) != '\0')
+			;
+		AP_SSID = String(pt);
+		addln("OK");
+		break;
+	case MODE_GET:
+		addln(AP_SSID);
+		break;
+	default:
+		rqueue_errored = true;
+		addln("ERROR NOCMD");
+		break;
+	}
+}
+
+void LAT8266Class::LAT8266_HIDE_WIFI_PASSWD()
+{
+	LAT8266_HIDE_WIFI_PASSWD_ = true;
+}
+void LAT8266Class::LAT8266_HIDE_AP_PASSWD()
+{
+	LAT8266_HIDE_AP_PASSWD_ = true;
 }
 void LAT8266Class::LAT8266_WEB_INTERFACE(bool tf)
 {
@@ -200,13 +284,43 @@ void LAT8266Class::cmdwifiPASSWD(char *pt)
 		addln("OK");
 		break;
 	case MODE_GET:
-		if (LAT8266_HIDE_PASSWD_)
+		if (LAT8266_HIDE_WIFI_PASSWD_)
 		{
 			rqueue_errored = true;
 			addln("ERROR ACCESS");
 		}
 		else
 			addln(WIFI_PASSWD);
+		break;
+	default:
+		rqueue_errored = true;
+		addln("ERROR NOCMD");
+		break;
+	}
+}
+void LAT8266Class::cmdapPASSWD(char *pt)
+{
+	switch (currentMode)
+	{
+	case MODE_SET:
+		while (*(pt++) != '\0')
+			;
+		if(String(pt).length()<8) {
+			rqueue_errored = true;
+			addln("ERROR PASSZ");
+			break;
+		}
+		AP_PASSWD = String(pt);
+		addln("OK");
+		break;
+	case MODE_GET:
+		if (LAT8266_HIDE_AP_PASSWD_)
+		{
+			rqueue_errored = true;
+			addln("ERROR ACCESS");
+		}
+		else
+			addln(AP_PASSWD);
 		break;
 	default:
 		rqueue_errored = true;
@@ -239,20 +353,78 @@ void LAT8266Class::cmdwifiCONN(char *pt)
 		break;
 	}
 }
+void LAT8266Class::cmdapCONN(char *pt)
+{
+	switch (currentMode)
+	{
+	case MODE_SET:
+		while (*(pt++) != '\0')
+			;
+			connectAP(AP_HIDDEN, strtol(pt, NULL, 0));
+		break;
+	case MODE_GET:
+		addln(AP_CONN);
+		break;
+	default:
+		connectAP(AP_HIDDEN);
+		break;
+	}
+}
+void LAT8266Class::cmdapHide(char *pt)
+{
+	switch (currentMode)
+	{
+	case MODE_SET:
+		while (*(pt++) != '\0')
+			;
+		capitalizeStr(pt);
+		if (!strcmp(pt, "TRUE"))
+			AP_HIDDEN = true;
+		else if (!strcmp(pt, "FALSE"))
+			AP_HIDDEN = false;
+		else
+		{
+			rqueue_errored = true;
+			addln("ERROR VALUE");
+			break;
+		}
+		addln("OK");
+		break;
+	case MODE_GET:
+		addln(AP_HIDDEN);
+		break;
+	default:
+		AP_HIDDEN = !AP_HIDDEN;
+		addln("OK");
+		break;
+	}
+}
 
 void LAT8266Class::cmdwifiIP()
 {
 	addln(WiFi.localIP().toString());
+}
+void LAT8266Class::cmdapIP()
+{
+	addln(WiFi.softAPIP().toString());
 }
 
 void LAT8266Class::cmdwifiCHNL()
 {
 	addln((uint8_t)WiFi.channel());
 }
+void LAT8266Class::cmdapStationNum()
+{
+	addln((uint8_t)WiFi.softAPgetStationNum());
+}
 
 void LAT8266Class::cmdwifiMAC()
 {
 	addln(WiFi.macAddress());
+}
+void LAT8266Class::cmdapMAC()
+{
+	addln(WiFi.softAPmacAddress());
 }
 
 void LAT8266Class::cmdwifiNAME(char *pt)
@@ -424,7 +596,7 @@ void LAT8266Class::loop_cmd()
 	 * Wait for command
 	 */
 	MDNS.update();
-	WebServerRun(LAT8266_WEB_INTERFACE_);
+	WebServer.run(LAT8266_WEB_INTERFACE_);
 	queue_reflect();
 	if (!Serial.available())
 		return;
@@ -474,11 +646,12 @@ void LAT8266Class::processCmd(bool silent)
 	}
 	if (!silent)
 		Serial.print(toSay);
-	else {
-	  if(rqueue_errored)
-		  toSay = "<<ERROR>>\n" + toSay;
-	  else
-		  toSay = "<<SUCCESS>>\n" + toSay;
+	else
+	{
+		if (rqueue_errored)
+			toSay = "<<ERROR>>\n" + toSay;
+		else
+			toSay = "<<SUCCESS>>\n" + toSay;
 	}
 }
 
@@ -595,8 +768,49 @@ void LAT8266Class::processArg(char *src)
 	}
 	else if (!strcmp(src, "WIFIDISC"))
 	{ // WIFI Disconnect
-		disconnect();
-		addln("OK");
+		if(disconnect())
+			addln("OK");
+		else {
+			rqueue_errored = true;
+			addln("ERROR DISC");
+		}
+	}
+	else if (!strcmp(src, "APCONN"))
+	{ // AP Connect + station number
+		cmdapCONN(src);
+	}
+	else if (!strcmp(src, "APDISC"))
+	{ // AP Disconnect
+		if(disconnectAP())
+			addln("OK");
+		else {
+			rqueue_errored = true;
+			addln("ERROR DISC");
+		}
+	}
+	else if (!strcmp(src, "APSSID"))
+	{ // AP SSID
+		cmdapSSID(src);
+	}
+	else if (!strcmp(src, "APPASSWD"))
+	{ // AP PASSWD
+		cmdapPASSWD(src);
+	}
+	else if (!strcmp(src, "APIP"))
+	{ // AP IP
+		cmdapIP();
+	}
+	else if (!strcmp(src, "APSTATION"))
+	{ // AP Station
+		cmdapStationNum();
+	}
+	else if (!strcmp(src, "APMAC"))
+	{ // AP MAC
+		cmdapMAC();
+	}
+	else if (!strcmp(src, "APHIDE"))
+	{ // AP Hidden Network
+		cmdapHide(src);
 	}
 	else if (!strcmp(src, "MDNSSERVICE"))
 	{ // MDNS Service

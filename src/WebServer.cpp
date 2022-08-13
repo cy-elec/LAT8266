@@ -8,15 +8,20 @@
 #include "WebServer.h"
 #include "WebServerSrc"
 
-AsyncWebServer server(82);
-bool WEB_INTERFACE=true;
 
-void nof(AsyncWebServerRequest *req) {
-	req->send_P(404, "text/html", nof_html);
+
+
+static String htmlFormat(String);
+static String processor(const String&);
+static void nof(AsyncWebServerRequest*);
+
+
+
+
+LAT8266WebServer::LAT8266WebServer() : server(82) {
 }
 
-
-void WebServerInit(void * LAT, int (*queue)(void *, String), String (*result)(void *, int)) {
+void LAT8266WebServer::init(void * LAT, int (*queue)(void *, String), String (*result)(void *, int)) {
 
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *req) {
 		req->send(200, "text/html", root_html);
@@ -75,12 +80,12 @@ void WebServerInit(void * LAT, int (*queue)(void *, String), String (*result)(vo
 	server.begin();
 }
 
-void WebServerRun(bool WEB_INTERFACE_) {
+void LAT8266WebServer::run(bool WEB_INTERFACE_) {
 	WEB_INTERFACE = WEB_INTERFACE_;
 }
 
 
-String htmlFormat(String var) {
+static String htmlFormat(String var) {
 	var.replace("ö", "&ouml;");
 	var.replace("ä", "&uuml;");
 	var.replace("ü", "&auml;");
@@ -91,7 +96,7 @@ String htmlFormat(String var) {
 	return var;
 }
 
-String processor(const String& var){
+static String processor(const String& var){
   if(var == "IP"){
     return String(WiFi.localIP().toString());
   }
@@ -102,4 +107,8 @@ String processor(const String& var){
 	return String(MAX_REFLECT);
   }
   return String();
+}
+
+static void nof(AsyncWebServerRequest *req) {
+	req->send_P(404, "text/html", nof_html);
 }
