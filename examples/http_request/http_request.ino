@@ -1,5 +1,5 @@
 /*
-  ESP_LAT.ino - Example code for the LAT8266 library
+  http_request.ino - Example code for the LAT8266 library
   -> reading time
 */
 
@@ -9,11 +9,8 @@
 #define PASSWD YOUR-WIFI-PASSWD
 
 void setup() {
-  Serial.begin(LAT_BAUD); //enable Serial with 115200 BAUD. This can, however, be changed at will
-  delay(500);
-  Serial.println();
-  
-  LAT.LAT8266_HIDE_PASSWD(); //disable read access of password
+  LAT.LAT8266_HIDE_WIFI_PASSWD(); //disable read access of password
+  LAT.LAT8266_HIDE_AP_PASSWD(); //disable read access of password
   LAT.WIFI_SSID = SSID; //setting SSID
   //Need to reflect the password as it is not accessibly from the code directly
   LAT.reflect("wifipasswd = "+PASSWD);

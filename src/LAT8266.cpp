@@ -16,6 +16,10 @@ String _resultr(void *obj, int id)
 	return static_cast<LAT8266Class *>(obj)->queue_reflect(id);
 }
 
+void LAT8266ClassConstructor(void) {
+	Serial.begin(LAT_BAUD);
+}
+
 LAT8266Class::LAT8266Class()
 {
 	strcpy(mdnsService, "http");

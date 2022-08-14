@@ -27,6 +27,8 @@ typedef enum cmdmodes
 	MODE_GET = 2
 } cmdmodes_t;
 
+void LAT8266ClassConstructor(void) __attribute__((constructor));
+
 class LAT8266Class
 {
 public:
