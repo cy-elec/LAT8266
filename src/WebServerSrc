@@ -77,11 +77,11 @@ const char index_html[] PROGMEM = R"rawliteral(
 
 All commands can be categorized into three different groups, which are labeled 1 to 3 respectively.<br>
 <ol>
-<li>Command Mode → executed by just printing the command<br>
+<li>Command Mode(1) → executed by just printing the command<br>
 The command mode will just execute the specified command</li>
-<li>Query Mode → executed when adding a<code>?</code> after the command<br>
+<li>Query Mode(2) → executed when adding a<code>?</code> after the command<br>
 The query mode will not execute the command, but return it's current settings</li>
-<li>Set Mode → executed when adding a<code>=</code> after the command, followed by the value to be set<br>
+<li>Set Mode(3) → executed when adding a<code>=</code> after the command, followed by the value to be set<br>
 The set mode will not execute the command, but set the specified settings<br>
 <b>!! Attention !!</b> Strings are not encapsulated by<code>"</code>. Spaces in Strings have to be escaped by a<code>\</code>.</li>
 </ol>
@@ -171,6 +171,27 @@ Commands may be chained with the separator<code>;</code>
 
 <p class="line"></p>
 
+<p align="center">
+<span><u>APSSID 23</u></span><br>
+<span>Set or Query the softAP SSID</span><br><br>
+<span><u>APPASSWD 23</u></span><br>
+<span>Set or Query the softAP password</span><br><br>
+<span><u>APCONN 123</u></span><br>
+<span>Query connection or start softAP.<br>Set-Mode: Set max station num</span><br><br>
+<span><u>APDISC 1</u></span><br>
+<span>Disconnect softAp</span><br><br>
+<span><u>APIP 12</u></span><br>
+<span>Query the softAP WebInterface IP</span><br><br>
+<span><u>APSTATION 1</u></span><br>
+<span>Query the softAP connected station num.</span><br><br>
+<span><u>APMAC 1</u></span><br>
+<span>Query the softAP MAC address</span><br><br>
+<span><u>APHIDE 123</u></span><br>
+<span>Toggle the network visibility of the softAP.<br>VALUES <code>TRUE (hidden) | FALSE (visible)</code></span><br><br>
+</p>
+
+<p class="line"></p>
+
 <p align="center" >
 <span><u>MDNSSERVICE 23</u></span><br>
 <span>Set or Query MDNS Service</span><br><br>
@@ -203,8 +224,13 @@ Commands may be chained with the separator<code>;</code>
 <td> String </td>
 </tr>
 <tr>
-<td> LAT8266_HIDE_PASSWD(void)  </td>
-<td> Disable password query. Cannot be disabled until reboot  </td>
+<td> LAT8266_HIDE_WIFI_PASSWD(void)  </td>
+<td> Disable WiFi password query. Cannot be disabled until reboot  </td>
+<td> void </td>
+</tr>
+<tr>
+<td> LAT8266_HIDE_AP_PASSWD(void)  </td>
+<td> Disable softAP password query. Cannot be disabled until reboot  </td>
 <td> void </td>
 </tr>
 <tr>
@@ -220,6 +246,16 @@ Commands may be chained with the separator<code>;</code>
 <tr>
 <td> disconnect(WIFI_CONNDEFAULTTIME) </td>
 <td> Disconnect from current Wi-Fi network.<br>WIFI_CONNDEFAULTTIME - timeout in ms </td>
+<td> bool </td>
+</tr>
+<tr>
+<td> connectAP(HIDDEN, STATION_NUM, SILENT_MODE) </td>
+<td> Create to a softAP.<br>HIDDEN - boolean to set visibility<br>STATION_NUM - sets max number of allowed stations (8 MAX)<br> SILENT_MODE - reduce output on UART</td>
+<td> bool </td>
+</tr>
+<tr>
+<td> disconnectAP(void) </td>
+<td> Disconnect softAP.<br> voi </td>
 <td> bool </td>
 </tr>
 <tr>
@@ -424,6 +460,36 @@ Commands may be chained with the separator<code>;</code>
 <td> WIFI </td>
 <td> ERROR ACCESS </td>
 <td> WIFIPASSWD? read access has been disabled </td>
+</tr>
+<tr>
+<td> WIFI </td>
+<td> ERROR DISC </td>
+<td> failed to disconnect wifi </td>
+</tr>
+<tr>
+<td> AP </td>
+<td> ERROR ACCESS </td>
+<td> APPASSWD? read access has been disabled </td>
+</tr>
+<tr>
+<td> AP </td>
+<td> ERROR CAP </td>
+<td> APCONN failed to create softAP </td>
+</tr>
+<tr>
+<td> AP </td>
+<td> ERROR SSID </td>
+<td> APCONN SSID is empty </td>
+</tr>
+<tr>
+<td> AP </td>
+<td> ERROR DISC </td>
+<td> failed to disconnect softAP </td>
+</tr>
+<tr>
+<td> AP </td>
+<td> ERROR PASSZ </td>
+<td> password length is too short (must be >= 8) </td>
 </tr>
 </table>
 </div>
