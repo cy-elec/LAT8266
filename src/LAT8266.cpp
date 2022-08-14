@@ -111,7 +111,12 @@ bool LAT8266Class::connect(unsigned long timeout, bool silent, bool ap, bool hid
 	if (!MDNS.begin(MDNSName) && MDNSName != (MDNS_DEFAULTNAMEPRE + MAC))
 	{
 		MDNSName = MDNS_DEFAULTNAMEPRE + MAC;
-		MDNS.begin(MDNSName);
+		if (!MDNS.begin(MDNSName))
+		{
+			rqueue_errored = true;
+			addln("ERROR MDNSBEGIN");
+			return false;
+		}
 	}
 
 	return true;
@@ -127,7 +132,14 @@ bool LAT8266Class::connectAP(bool hidden, int stations, bool silent)
 		AP_CONN = false;
 		return false;
 	}
+	MDNS.end();
 	bool r = WiFi.softAP(AP_SSID, AP_PASSWD, 1, hidden ? 1 : 0, stations > 8 ? 8 : stations < 1 ? 1 : stations);
+	if (!MDNS.begin(MDNSName))
+	{
+		rqueue_errored = true;
+		addln("ERROR MDNSBEGIN");
+		return -1;
+	}
 	AP_CONN = r;
 	if (silent)
 		return r;
